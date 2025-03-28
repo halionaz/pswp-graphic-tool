@@ -1,18 +1,8 @@
 import { forwardRef, MouseEvent } from 'react';
 import s from './Rectangle.module.css';
+import { GraphicObjectViewInterface } from '@/utils/types';
 
-interface Props {
-  isSelected: boolean;
-  color: string;
-  position: {
-    x: number;
-    y: number;
-  };
-  scale: {
-    width: number;
-    height: number;
-  };
-  zIndex: number;
+interface Props extends GraphicObjectViewInterface {
   onMouseDown: (e: MouseEvent<HTMLDivElement>) => void;
 }
 
@@ -29,7 +19,7 @@ const Rectangle = forwardRef<HTMLDivElement, Props>(
           width: scale.width,
           height: scale.height,
           zIndex,
-          border: isSelected ? '#0a99ff 5px solid' : 'none',
+          border: isSelected ? '#0a99ff 3px solid' : 'none',
         }}
         onMouseDown={onMouseDown}
       />

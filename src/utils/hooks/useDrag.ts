@@ -1,6 +1,7 @@
+import { PositionType } from '@/utils/types';
 import { useEffect, useRef, useState } from 'react';
 
-const useDrag = (setPosition: (newPos: { x: number; y: number }) => void) => {
+const useDrag = (setPosition: (newPos: PositionType) => void) => {
   const dragRef = useRef<HTMLDivElement>(null);
 
   const [isDragging, setIsDragging] = useState(false);
