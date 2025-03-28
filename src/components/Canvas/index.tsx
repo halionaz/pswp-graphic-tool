@@ -31,7 +31,7 @@ const Canvas = () => {
         return (
           <Shape
             key={index}
-            isSelected={selectedIndex.indexOf(index) !== -1}
+            isSelected={selectedIndex.indexOf(id) !== -1}
             color={color}
             scale={scale}
             zIndex={zIndex}

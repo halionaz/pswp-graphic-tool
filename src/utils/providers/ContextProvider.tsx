@@ -1,49 +1,61 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 import {
   ControllerContext,
   ObjectsContext,
   SelectedIndexContext,
 } from '@/utils/context/GraphicEditorContext';
-import { GraphicObjectInterface } from '@/utils/types';
+import { GraphicObjectInterface, GraphicObjectType } from '@/utils/types';
 
 const ContextProvider = ({ children }: PropsWithChildren) => {
-  const [objects, setObjects] = useState<GraphicObjectInterface[]>([
-    {
-      id: '123',
+  const [objects, setObjects] = useState<GraphicObjectInterface[]>([]);
+  const [selectedObjectsID, setSelectedObjectsID] = useState<string[]>([]);
+
+  const add = (type: GraphicObjectType) => {
+    const newObject: GraphicObjectInterface = {
+      id: crypto.randomUUID(),
+      type,
       color: 'gray',
-      position: { x: 10, y: 10 },
-      scale: { width: 100, height: 100 },
-      type: 'rectangle',
+      position: { x: 100, y: 100 }, // TODO: 현재 마우스 위치 or 선택된 오브젝트 옆에 생성
+      scale: { height: 100, width: 100 },
       zIndex: 1,
-    },
-  ]);
-  const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
+    };
+    setObjects(prev => [...prev, newObject]);
+    setSelectedObjectsID(prev => [...prev, newObject.id]);
+  };
+
+  const remove = () => {
+    setObjects(prev =>
+      prev.filter(({ id }) => selectedObjectsID.indexOf(id) === -1)
+    );
+    clearSelect();
+  };
 
   const update = (
     id: string,
     updateProperties: Partial<GraphicObjectInterface>
   ) => {
     setObjects(prev =>
-      prev.map(obj => (obj.id === id ? { ...obj, ...updateProperties } : obj))
+      prev.map(obj => (id === obj.id ? { ...obj, ...updateProperties } : obj))
     );
   };
 
   const select = (id: string) => {
-    const objectIndex = objects.findIndex(obj => obj.id === id);
-    if (objectIndex !== -1 && selectedIndex.indexOf(objectIndex) === -1) {
-      setSelectedIndex(prev => [...prev, objectIndex]);
+    if (selectedObjectsID.indexOf(id) === -1) {
+      setSelectedObjectsID(prev => [...prev, id]);
     }
   };
 
   const clearSelect = () => {
-    setSelectedIndex([]);
+    setSelectedObjectsID([]);
   };
 
   return (
     <ObjectsContext.Provider value={objects}>
-      <SelectedIndexContext.Provider value={selectedIndex}>
-        <ControllerContext.Provider value={{ update, select, clearSelect }}>
+      <SelectedIndexContext.Provider value={selectedObjectsID}>
+        <ControllerContext.Provider
+          value={{ add, remove, update, select, clearSelect }}
+        >
           {children}
         </ControllerContext.Provider>
       </SelectedIndexContext.Provider>

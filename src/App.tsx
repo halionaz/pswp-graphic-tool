@@ -1,11 +1,11 @@
 import Canvas from '@/components/Canvas';
+import ToolBar from '@/components/ToolBar';
 import ContextProvider from '@/utils/providers/ContextProvider';
-// import PropertiesPanel from '@/components/PropertiesPanel';
-// import ToolBar from '@/components/ToolBar';
 
 const App = () => {
   return (
     <ContextProvider>
+      <ToolBar />
       <Canvas />
     </ContextProvider>
   );
