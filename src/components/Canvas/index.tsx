@@ -19,7 +19,7 @@ const Canvas = () => {
 
   return (
     <div className={s.Canvas} onMouseDown={clearSelect}>
-      {objects.map(({ color, position, scale, zIndex, id }, index) => {
+      {objects.map(({ type, color, position, scale, zIndex, id }, index) => {
         // TODO: Apply Factory Pattern
         const setPosition = (newPos: PositionType) => {
           update(id, { position: newPos });
@@ -31,6 +31,7 @@ const Canvas = () => {
         return (
           <Shape
             key={index}
+            type={type}
             isSelected={selectedIndex.indexOf(id) !== -1}
             color={color}
             scale={scale}

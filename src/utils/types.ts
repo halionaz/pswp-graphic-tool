@@ -8,7 +8,7 @@ export interface ScaleType {
   height: number;
 }
 
-export type GraphicObjectType = 'rectangle';
+export type GraphicObjectType = 'rectangle' | 'circle';
 
 export interface GraphicObjectInterface {
   id: string;
@@ -25,4 +25,8 @@ export interface GraphicObjectViewInterface {
   scale: ScaleType;
   color: string;
   zIndex: number;
+}
+
+export interface ShapeViewProps extends GraphicObjectViewInterface {
+  onMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
 }

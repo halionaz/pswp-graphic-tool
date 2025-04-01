@@ -1,13 +1,14 @@
-import { forwardRef } from 'react';
-import s from './Rectangle.module.css';
 import { ShapeViewProps } from '@/utils/types';
+import { forwardRef } from 'react';
 
-const Rectangle = forwardRef<HTMLDivElement, ShapeViewProps>(
+import s from './Circle.module.css';
+
+const Circle = forwardRef<HTMLDivElement, ShapeViewProps>(
   ({ isSelected, color, position, scale, zIndex, onMouseDown }, ref) => {
     return (
       <div
         ref={ref}
-        className={s.Rectangle}
+        className={s.Circle}
         style={{
           backgroundColor: color,
           top: position.y,
@@ -22,5 +23,4 @@ const Rectangle = forwardRef<HTMLDivElement, ShapeViewProps>(
     );
   }
 );
-
-export default Rectangle;
+export default Circle;

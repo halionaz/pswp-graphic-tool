@@ -9,6 +9,7 @@ const ToolBar = () => {
   return (
     <div className={s.Wrapper}>
       <button onClick={() => controller.add('rectangle')}>네모</button>
+      <button onClick={() => controller.add('circle')}>원</button>
       <button onClick={() => controller.remove()}>삭제</button>
     </div>
   );
