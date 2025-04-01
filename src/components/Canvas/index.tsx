@@ -3,14 +3,14 @@ import s from './Canvas.module.css';
 import {
   ControllerContext,
   ObjectsContext,
-  SelectedIndexContext,
+  SelectedObjectsContext,
 } from '@/utils/context/GraphicEditorContext';
 import Shape from '@/components/Shape';
 import { PositionType } from '@/utils/types';
 
 const Canvas = () => {
   const objects = useContext(ObjectsContext);
-  const selectedIndex = useContext(SelectedIndexContext);
+  const selectedIndex = useContext(SelectedObjectsContext);
   const controller = useContext(ControllerContext);
 
   if (controller === undefined) return <div>Loading . . .</div>;

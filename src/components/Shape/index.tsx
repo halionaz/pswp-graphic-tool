@@ -4,8 +4,8 @@ import {
   GraphicObjectViewInterface,
   PositionType,
 } from '@/utils/types';
-import Circle from '@/views/shapes/Circle';
-import Rectangle from '@/views/shapes/Rectangle';
+import Circle from '@/components/Shape/Circle';
+import Rectangle from '@/components/Shape/Rectangle';
 
 interface Props extends GraphicObjectViewInterface {
   type: GraphicObjectType;

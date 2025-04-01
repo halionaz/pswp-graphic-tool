@@ -3,7 +3,7 @@ import { PropsWithChildren, useState } from 'react';
 import {
   ControllerContext,
   ObjectsContext,
-  SelectedIndexContext,
+  SelectedObjectsContext,
 } from '@/utils/context/GraphicEditorContext';
 import { GraphicObjectInterface, GraphicObjectType } from '@/utils/types';
 
@@ -52,13 +52,13 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <ObjectsContext.Provider value={objects}>
-      <SelectedIndexContext.Provider value={selectedObjectsID}>
+      <SelectedObjectsContext.Provider value={selectedObjectsID}>
         <ControllerContext.Provider
           value={{ add, remove, update, select, clearSelect }}
         >
           {children}
         </ControllerContext.Provider>
-      </SelectedIndexContext.Provider>
+      </SelectedObjectsContext.Provider>
     </ObjectsContext.Provider>
   );
 };

@@ -10,7 +10,7 @@ interface ControllerContextInterface {
 }
 
 export const ObjectsContext = createContext<GraphicObjectInterface[]>([]);
-export const SelectedIndexContext = createContext<string[]>([]);
+export const SelectedObjectsContext = createContext<string[]>([]);
 export const ControllerContext = createContext<
   ControllerContextInterface | undefined
 >(undefined);
