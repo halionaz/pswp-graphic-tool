@@ -1,4 +1,4 @@
-import { GraphicObjectInterface, GraphicObjectType } from '@/utils/types';
+import { GraphicObjectInterface, GraphicObjectType } from '@/libs/types';
 import { createContext } from 'react';
 
 interface ControllerContextInterface {
@@ -7,6 +7,7 @@ interface ControllerContextInterface {
   update: (id: string, updates: Partial<GraphicObjectInterface>) => void;
   select: (id: string) => void;
   clearSelect: () => void;
+  clear: () => void;
 }
 
 export const ObjectsContext = createContext<GraphicObjectInterface[]>([]);

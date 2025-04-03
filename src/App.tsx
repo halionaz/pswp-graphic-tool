@@ -1,7 +1,7 @@
 import Canvas from '@/components/Canvas';
 import PropertiesPanel from '@/components/PropertiesPanel';
 import ToolBar from '@/components/ToolBar';
-import ContextProvider from '@/utils/providers/ContextProvider';
+import ContextProvider from '@/libs/providers/ContextProvider';
 
 const App = () => {
   return (

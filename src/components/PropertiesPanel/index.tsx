@@ -4,8 +4,8 @@ import {
   ControllerContext,
   ObjectsContext,
   SelectedObjectsContext,
-} from '@/utils/context/GraphicEditorContext';
-import { GraphicObjectInterface } from '@/utils/types';
+} from '@/libs/context/GraphicEditorContext';
+import { GraphicObjectInterface } from '@/libs/types';
 
 const PropertiesPanel = () => {
   // TODO: View, Controller 분리 & 정리
@@ -30,7 +30,7 @@ const PropertiesPanel = () => {
       {viewData && (
         <>
           <h1>{viewData.type}</h1>
-          <form>
+          <div>
             <label>Pos X</label>
             <input
               type="number"
@@ -41,8 +41,8 @@ const PropertiesPanel = () => {
                 })
               }
             />
-          </form>
-          <form>
+          </div>
+          <div>
             <label>Pos Y</label>
             <input
               type="number"
@@ -53,8 +53,22 @@ const PropertiesPanel = () => {
                 })
               }
             />
-          </form>
-          <form>
+          </div>
+          <div>
+            <label>Rotation</label>
+            <input
+              type="range"
+              min="0"
+              max="360"
+              value={viewData.rotation}
+              onChange={e =>
+                onChange({
+                  rotation: Number(e.target.value),
+                })
+              }
+            />
+          </div>
+          <div>
             <label>Width</label>
             <input
               type="number"
@@ -65,8 +79,8 @@ const PropertiesPanel = () => {
                 })
               }
             />
-          </form>
-          <form>
+          </div>
+          <div>
             <label>Height</label>
             <input
               type="number"
@@ -77,10 +91,11 @@ const PropertiesPanel = () => {
                 })
               }
             />
-          </form>
-          <form>
+          </div>
+          <div>
             <label>Color</label>
             <input
+              type="color"
               value={viewData.color}
               onChange={e =>
                 onChange({
@@ -88,21 +103,15 @@ const PropertiesPanel = () => {
                 })
               }
             />
-          </form>
-          <form>
-            <label>Z-Index</label>
-            <input
-              type="number"
-              value={viewData.zIndex}
-              onChange={e =>
-                onChange({
-                  zIndex: Number(e.target.value),
-                })
-              }
-            />
-          </form>
+          </div>
         </>
       )}
+      <div>
+        <h2>Layer</h2>
+        {objects.map((val, index) => {
+          return <div key={index}>{val.type}</div>;
+        })}
+      </div>
     </div>
   );
 };

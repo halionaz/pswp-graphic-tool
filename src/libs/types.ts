@@ -14,19 +14,20 @@ export interface GraphicObjectInterface {
   id: string;
   type: GraphicObjectType;
   position: PositionType;
+  rotation: number;
   scale: ScaleType;
   color: string;
-  zIndex: number;
 }
 
 export interface GraphicObjectViewInterface {
   isSelected: boolean;
   position: PositionType;
+  rotation: number;
   scale: ScaleType;
   color: string;
-  zIndex: number;
 }
 
-export interface ShapeViewProps extends GraphicObjectViewInterface {
+export interface ShapeViewProps {
+  style: React.CSSProperties;
   onMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
 }

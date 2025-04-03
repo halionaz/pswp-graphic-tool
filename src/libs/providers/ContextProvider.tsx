@@ -4,8 +4,8 @@ import {
   ControllerContext,
   ObjectsContext,
   SelectedObjectsContext,
-} from '@/utils/context/GraphicEditorContext';
-import { GraphicObjectInterface, GraphicObjectType } from '@/utils/types';
+} from '@/libs/context/GraphicEditorContext';
+import { GraphicObjectInterface, GraphicObjectType } from '@/libs/types';
 
 const ContextProvider = ({ children }: PropsWithChildren) => {
   const [objects, setObjects] = useState<GraphicObjectInterface[]>([]);
@@ -15,10 +15,10 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     const newObject: GraphicObjectInterface = {
       id: crypto.randomUUID(),
       type,
-      color: 'gray',
+      color: '#919191',
       position: { x: 100, y: 100 }, // TODO: 현재 마우스 위치 or 선택된 오브젝트 옆에 생성
       scale: { height: 100, width: 100 },
-      zIndex: 1,
+      rotation: 0,
     };
     setObjects(prev => [...prev, newObject]);
     setSelectedObjectsID(prev => [...prev, newObject.id]);
@@ -31,6 +31,8 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     clearSelect();
   };
 
+  // TODO: id 안 받고, updateProperties를 변경값 기반으로 변경
+  // update: (prev) => return newProperties
   const update = (
     id: string,
     updateProperties: Partial<GraphicObjectInterface>
@@ -50,11 +52,16 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     setSelectedObjectsID([]);
   };
 
+  const clear = () => {
+    clearSelect();
+    setObjects([]);
+  };
+
   return (
     <ObjectsContext.Provider value={objects}>
       <SelectedObjectsContext.Provider value={selectedObjectsID}>
         <ControllerContext.Provider
-          value={{ add, remove, update, select, clearSelect }}
+          value={{ add, remove, update, select, clearSelect, clear }}
         >
           {children}
         </ControllerContext.Provider>

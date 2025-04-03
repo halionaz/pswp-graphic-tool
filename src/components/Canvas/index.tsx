@@ -4,9 +4,9 @@ import {
   ControllerContext,
   ObjectsContext,
   SelectedObjectsContext,
-} from '@/utils/context/GraphicEditorContext';
+} from '@/libs/context/GraphicEditorContext';
 import Shape from '@/components/Shape';
-import { PositionType } from '@/utils/types';
+import { PositionType } from '@/libs/types';
 
 const Canvas = () => {
   const objects = useContext(ObjectsContext);
@@ -19,7 +19,7 @@ const Canvas = () => {
 
   return (
     <div className={s.Canvas} onMouseDown={clearSelect}>
-      {objects.map(({ type, color, position, scale, zIndex, id }, index) => {
+      {objects.map(({ type, color, position, scale, id, rotation }, index) => {
         // TODO: Apply Factory Pattern
         const setPosition = (newPos: PositionType) => {
           update(id, { position: newPos });
@@ -35,7 +35,7 @@ const Canvas = () => {
             isSelected={selectedIndex.indexOf(id) !== -1}
             color={color}
             scale={scale}
-            zIndex={zIndex}
+            rotation={rotation}
             position={position}
             setPosition={setPosition}
             setIsSelected={setIsSelected}
