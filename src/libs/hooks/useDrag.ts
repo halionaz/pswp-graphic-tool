@@ -1,4 +1,5 @@
 import { PositionType } from '@/libs/types';
+import { getTranslateValues } from '@/libs/utils/getTranslateValues';
 import { useCallback, useRef } from 'react';
 
 const useDrag = (setPosition: (newPos: PositionType) => void) => {
@@ -10,9 +11,9 @@ const useDrag = (setPosition: (newPos: PositionType) => void) => {
 
       const startX = event.clientX;
       const startY = event.clientY;
-      const rect = dragRef.current.getBoundingClientRect();
-      const initialX = rect.left;
-      const initialY = rect.top;
+      const rect = getTranslateValues(dragRef.current);
+      const initialX = rect.x;
+      const initialY = rect.y;
 
       const onMouseMove = (moveEvent: MouseEvent) => {
         const dx = moveEvent.clientX - startX;
