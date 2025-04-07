@@ -23,7 +23,7 @@ const Shape = ({
   isSelected,
   rotation,
 }: Props) => {
-  const { dragRef, handleMouseDown } = useDrag(setPosition);
+  const { dragRef, handleMouseDown, isGrabbing } = useDrag(setPosition);
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     handleMouseDown(e);
@@ -31,11 +31,13 @@ const Shape = ({
   };
 
   const style: React.CSSProperties = {
+    position: 'absolute',
     backgroundColor: color,
     transform: `translate3d(${position.x}px, ${position.y}px, 0) rotate(${rotation}deg)`,
     width: scale.width,
     height: scale.height,
     border: isSelected ? '#0a99ff 3px solid' : 'none',
+    cursor: isGrabbing ? 'grabbing' : 'grab',
   };
   const shapeProps = { style, ref: dragRef, onMouseDown };
 
