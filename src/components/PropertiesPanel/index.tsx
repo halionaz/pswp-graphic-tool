@@ -5,7 +5,6 @@ import {
   ObjectsContext,
   SelectedObjectsContext,
 } from '@/libs/context/GraphicEditorContext';
-import { GraphicObjectInterface } from '@/libs/types';
 
 const PropertiesPanel = () => {
   // TODO: View, Controller 분리 & 정리
@@ -21,10 +20,6 @@ const PropertiesPanel = () => {
 
   const { update } = controller;
 
-  const onChange = (updates: Partial<GraphicObjectInterface>) => {
-    update(viewData.id, updates);
-  };
-
   return (
     <div className={s.Container}>
       {viewData && (
@@ -36,7 +31,7 @@ const PropertiesPanel = () => {
               type="number"
               value={viewData.position.x}
               onChange={e =>
-                onChange({
+                update({
                   position: { ...viewData.position, x: Number(e.target.value) },
                 })
               }
@@ -48,7 +43,7 @@ const PropertiesPanel = () => {
               type="number"
               value={viewData.position.y}
               onChange={e =>
-                onChange({
+                update({
                   position: { ...viewData.position, y: Number(e.target.value) },
                 })
               }
@@ -62,7 +57,7 @@ const PropertiesPanel = () => {
               max="360"
               value={viewData.rotation}
               onChange={e =>
-                onChange({
+                update({
                   rotation: Number(e.target.value),
                 })
               }
@@ -74,7 +69,7 @@ const PropertiesPanel = () => {
               type="number"
               value={viewData.scale.width}
               onChange={e =>
-                onChange({
+                update({
                   scale: { ...viewData.scale, width: Number(e.target.value) },
                 })
               }
@@ -86,7 +81,7 @@ const PropertiesPanel = () => {
               type="number"
               value={viewData.scale.height}
               onChange={e =>
-                onChange({
+                update({
                   scale: { ...viewData.scale, height: Number(e.target.value) },
                 })
               }
@@ -98,7 +93,7 @@ const PropertiesPanel = () => {
               type="color"
               value={viewData.color}
               onChange={e =>
-                onChange({
+                update({
                   color: e.target.value,
                 })
               }

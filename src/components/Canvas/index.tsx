@@ -15,19 +15,11 @@ const Canvas = () => {
 
   if (controller === undefined) return <div>Loading . . .</div>;
 
-  const { update, select, clearSelect } = controller;
+  const { updateByDiff, select, clearSelect } = controller;
 
   return (
     <div className={s.Canvas} onMouseDown={clearSelect}>
       {objects.map(({ type, color, position, scale, id, rotation }, index) => {
-        // TODO: Apply Factory Pattern
-        const setPosition = (newPos: PositionType) => {
-          update(id, { position: newPos });
-        };
-        const setIsSelected = () => {
-          select(id);
-        };
-
         return (
           <Shape
             key={index}
@@ -37,8 +29,10 @@ const Canvas = () => {
             scale={scale}
             rotation={rotation}
             position={position}
-            setPosition={setPosition}
-            setIsSelected={setIsSelected}
+            updatePosition={(diff: PositionType) =>
+              updateByDiff({ position: diff })
+            }
+            setIsSelected={() => select(id)}
           />
         );
       })}

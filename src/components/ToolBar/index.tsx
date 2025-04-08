@@ -8,10 +8,10 @@ const ToolBar = () => {
   if (controller === undefined) return <div>Loading . . .</div>;
   return (
     <div className={s.Wrapper}>
-      <button onClick={() => controller.add('rectangle')}>네모</button>
-      <button onClick={() => controller.add('circle')}>원</button>
-      <button onClick={() => controller.remove()}>삭제</button>
-      <button onClick={() => controller.clear()}>초기화</button>
+      <button onClick={() => controller.add('rectangle')}>Rectangle</button>
+      <button onClick={() => controller.add('ellipse')}>Ellipse</button>
+      <button onClick={() => controller.remove()}>Delete</button>
+      <button onClick={() => controller.clear()}>Clear Canvas</button>
     </div>
   );
 };

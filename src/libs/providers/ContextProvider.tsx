@@ -5,7 +5,11 @@ import {
   ObjectsContext,
   SelectedObjectsContext,
 } from '@/libs/context/GraphicEditorContext';
-import { GraphicObjectInterface, GraphicObjectType } from '@/libs/types';
+import {
+  GraphicObjectChangeableInterface,
+  GraphicObjectInterface,
+  GraphicObjectType,
+} from '@/libs/types';
 
 const ContextProvider = ({ children }: PropsWithChildren) => {
   const [objects, setObjects] = useState<GraphicObjectInterface[]>([]);
@@ -31,14 +35,50 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     clearSelect();
   };
 
-  // TODO: id 안 받고, updateProperties를 변경값 기반으로 변경
-  // update: (prev) => return newProperties
-  const update = (
-    id: string,
-    updateProperties: Partial<GraphicObjectInterface>
-  ) => {
+  /**
+   * 새로운 값을 넣어 프로퍼티를 업데이트합니다.
+   * @param updateProperties 새로운 값입니다.
+   */
+  const update = (updateProperties: Partial<GraphicObjectInterface>) => {
     setObjects(prev =>
-      prev.map(obj => (id === obj.id ? { ...obj, ...updateProperties } : obj))
+      prev.map(obj =>
+        selectedObjectsID.indexOf(obj.id) === -1
+          ? obj
+          : { ...obj, ...updateProperties }
+      )
+    );
+  };
+
+  /**
+   * diff를 넣어 프로퍼티를 업데이트합니다.
+   * @param diff 달라지는 값 정보입니다. position, rotation, scale을 지정할 수 있습니다.
+   */
+  const updateByDiff = (diff: Partial<GraphicObjectChangeableInterface>) => {
+    setObjects(prev =>
+      prev.map(obj => {
+        if (selectedObjectsID.indexOf(obj.id) === -1) return obj;
+
+        const updateProperties = {
+          position: diff.position
+            ? {
+                x: obj.position.x + diff.position.x,
+                y: obj.position.y + diff.position.y,
+              }
+            : obj.position,
+          rotation: diff.rotation ? obj.rotation + diff.rotation : obj.rotation,
+          scale: diff.scale
+            ? {
+                width: obj.scale.width + diff.scale.width,
+                height: obj.scale.height + diff.scale.height,
+              }
+            : obj.scale,
+        };
+
+        return {
+          ...obj,
+          ...updateProperties,
+        };
+      })
     );
   };
 
@@ -61,7 +101,15 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     <ObjectsContext.Provider value={objects}>
       <SelectedObjectsContext.Provider value={selectedObjectsID}>
         <ControllerContext.Provider
-          value={{ add, remove, update, select, clearSelect, clear }}
+          value={{
+            add,
+            remove,
+            update,
+            select,
+            clearSelect,
+            clear,
+            updateByDiff,
+          }}
         >
           {children}
         </ControllerContext.Provider>

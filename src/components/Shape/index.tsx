@@ -4,18 +4,18 @@ import {
   GraphicObjectViewInterface,
   PositionType,
 } from '@/libs/types';
-import Circle from '@/components/Shape/Circle';
+import Ellipse from '@/components/Shape/Ellipse';
 import Rectangle from '@/components/Shape/Rectangle';
 
 interface Props extends GraphicObjectViewInterface {
   type: GraphicObjectType;
   setIsSelected: () => void;
-  setPosition: (newPos: PositionType) => void;
+  updatePosition: (diff: PositionType) => void;
 }
 
 const Shape = ({
   type,
-  setPosition,
+  updatePosition,
   setIsSelected,
   color,
   position,
@@ -23,11 +23,11 @@ const Shape = ({
   isSelected,
   rotation,
 }: Props) => {
-  const { dragRef, handleMouseDown, isGrabbing } = useDrag(setPosition);
+  const { dragRef, handleMouseDown, isDragging } = useDrag(updatePosition);
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    handleMouseDown(e);
     setIsSelected();
+    handleMouseDown(e);
   };
 
   const style: React.CSSProperties = {
@@ -37,15 +37,15 @@ const Shape = ({
     width: scale.width,
     height: scale.height,
     border: isSelected ? '#0a99ff 3px solid' : 'none',
-    cursor: isGrabbing ? 'grabbing' : 'grab',
+    cursor: isDragging ? 'grabbing' : 'grab',
   };
   const shapeProps = { style, ref: dragRef, onMouseDown };
 
   switch (type) {
     case 'rectangle':
       return <Rectangle {...shapeProps} />;
-    case 'circle':
-      return <Circle {...shapeProps} />;
+    case 'ellipse':
+      return <Ellipse {...shapeProps} />;
   }
 };
 export default Shape;

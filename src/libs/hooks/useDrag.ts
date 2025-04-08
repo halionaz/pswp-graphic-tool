@@ -1,41 +1,45 @@
 import { PositionType } from '@/libs/types';
-import { getTranslateValues } from '@/libs/utils/getTranslateValues';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-const useDrag = (setPosition: (newPos: PositionType) => void) => {
+const useDrag = (updatePosition: (diff: PositionType) => void) => {
   const dragRef = useRef<HTMLDivElement | null>(null);
-  const [isGrabbing, setIsGrabbing] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
 
-  const handleMouseDown = useCallback(
-    (event: React.MouseEvent) => {
+  const handleMouseDown = useCallback((event: React.MouseEvent) => {
+    if (dragRef.current === null) return;
+
+    setIsDragging(true);
+    setStartPosition({ x: event.clientX, y: event.clientY });
+  }, []);
+
+  useEffect(() => {
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      if (!isDragging) return;
       if (dragRef.current === null) return;
 
-      const startX = event.clientX;
-      const startY = event.clientY;
-      const rect = getTranslateValues(dragRef.current);
-      const initialX = rect.x;
-      const initialY = rect.y;
-      setIsGrabbing(true);
+      setStartPosition({ x: moveEvent.clientX, y: moveEvent.clientY });
+      updatePosition({
+        x: moveEvent.clientX - startPosition.x,
+        y: moveEvent.clientY - startPosition.y,
+      });
+    };
+    const onMouseUp = () => {
+      setIsDragging(false);
+    };
 
-      const onMouseMove = (moveEvent: MouseEvent) => {
-        const dx = moveEvent.clientX - startX;
-        const dy = moveEvent.clientY - startY;
-        setPosition({ x: initialX + dx, y: initialY + dy });
-      };
-
-      const onMouseUp = () => {
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-        setIsGrabbing(false);
-      };
-
+    if (isDragging) {
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
-    },
-    [setPosition]
-  );
+    }
 
-  return { dragRef, handleMouseDown, isGrabbing };
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+  }, [isDragging, updatePosition, startPosition]);
+
+  return { dragRef, handleMouseDown, isDragging };
 };
 
 export default useDrag;

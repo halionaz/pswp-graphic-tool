@@ -1,18 +1,18 @@
 import { forwardRef } from 'react';
 import { ShapeViewProps } from '@/libs/types';
 
-import s from './Circle.module.css';
+import s from './Ellipse.module.css';
 
-const Circle = forwardRef<HTMLDivElement, ShapeViewProps>(
+const Ellipse = forwardRef<HTMLDivElement, ShapeViewProps>(
   ({ style, onMouseDown }, ref) => {
     return (
       <div
         ref={ref}
-        className={s.Circle}
+        className={s.Ellipse}
         style={style}
         onMouseDown={onMouseDown}
       />
     );
   }
 );
-export default Circle;
+export default Ellipse;
