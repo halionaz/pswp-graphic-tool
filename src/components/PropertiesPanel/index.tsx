@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef, useEffect } from 'react';
 import s from './PropertiesPanel.module.css';
 import {
   ControllerContext,
@@ -10,11 +10,19 @@ const PropertiesPanel = () => {
   // TODO: View, Controller 분리 & 정리
   const objects = useContext(ObjectsContext);
   const controller = useContext(ControllerContext);
+  console.log('controller.rotateGroup =', controller?.rotateGroup);
   const selectedObjects = useContext(SelectedObjectsContext);
 
   const data = objects.filter(val => selectedObjects.indexOf(val.id) !== -1);
-
   const viewData = data[0];
+
+  const lastRotationRef = useRef(viewData?.rotation ?? 0);
+
+  useEffect(() => {
+    if (viewData) lastRotationRef.current = viewData.rotation;
+  }, [selectedObjects.join(',')]);
+
+  if (!viewData) return null;
 
   if (controller === undefined) return <div>Loading ...</div>;
 
@@ -56,11 +64,18 @@ const PropertiesPanel = () => {
               min="0"
               max="360"
               value={viewData.rotation}
-              onChange={e =>
-                update({
-                  rotation: Number(e.target.value),
-                })
-              }
+              onChange={e => {
+	        const newVal = Number(e.target.value);
+		if (selectedObjects.length > 1) {
+		  const delta  = newVal - lastRotationRef.current;
+		  if (delta !== 0) {
+		    controller.rotateGroup(delta);
+		    lastRotationRef.current = newVal
+		  }
+		} else { 
+	          update({ rotation: newVal })
+                }
+	     }}
             />
           </div>
           <div>
