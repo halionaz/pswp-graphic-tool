@@ -1,6 +1,15 @@
 // geometry.ts
 // helper functions for complex actions
 
+import { GraphicObjectInterface } from '@/libs/types';
+
+export function getObjectCenter(obj: GraphicObjectInterface) {
+  return {
+    x: obj.position.x + obj.scale.width / 2,
+    y: obj.position.y + obj.scale.height / 2,
+  };
+}
+
 export function rotatePoint(
   x: number,
   y: number,
@@ -16,4 +25,4 @@ export function rotatePoint(
     x: cx + dx * cos - dy * sin,
     y: cy + dx * sin - dy * cos,
   };
-)
+}

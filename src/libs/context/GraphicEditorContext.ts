@@ -13,6 +13,7 @@ interface ControllerContextInterface {
   select: (id: string) => void;
   clearSelect: () => void;
   clear: () => void;
+  rotateGroup: (deltadeg: number) => void;
 }
 
 export const ObjectsContext = createContext<GraphicObjectInterface[]>([]);

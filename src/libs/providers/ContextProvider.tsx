@@ -10,6 +10,7 @@ import {
   GraphicObjectInterface,
   GraphicObjectType,
 } from '@/libs/types';
+import { getObjectCenter, rotatePoint } from '@/libs/geometry';
 
 const ContextProvider = ({ children }: PropsWithChildren) => {
   const [objects, setObjects] = useState<GraphicObjectInterface[]>([]);
@@ -53,11 +54,47 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     );
   };
 
+  const rotateGroup = (deltaDeg: number) => {
+    if (selectedObjectsID.length <= 1) return;
+
+    const angleRad = (deltaDeg * Math.PI)  / 180;
+
+    // 1. collect selected objects
+    const selected = objects.filter(o => selectedObjectsID.includes(o.id));
+
+    // 2. compute centroid of their centers
+    const sum = selected.reduce(
+      (acc, o) => {
+        const c = getObjectCenter(o);
+	return { x: acc.x + c.x, y: acc.y + c.y };
+      },
+      { x: 0, y: 0 }
+    );
+    const pivot = { x: sum.x / selected.length, y: sum.y / selected.length };
+
+    setObjects(prev =>
+      prev.map(o => {
+        if (!selectedObjectsID.includes(o.id)) return o;
+
+	const center = getObjectCenter(o);
+	const rotated = rotatePoint(center.x, center.y, pivot.x, pivot.y, angleRad)
+	return {
+	  ...o,
+	  position: {
+	    x: rotated.x - o.scale.width / 2,
+	    y: rotated.y - o.scale.height / 2,
+	  },
+	  rotation: ((o.rotation + deltaDeg) % 360 + 360) % 360,
+	};
+      })
+    );
+  };
+
   /**
    * diff를 넣어 프로퍼티를 업데이트합니다.
    * @param diff 달라지는 값 정보입니다. position, rotation, scale을 지정할 수 있습니다.
    */
-  const updateByDiff = (diff: Partial<GraphicObjectChangeableInterface>) => {
+     const updateByDiff = (diff: Partial<GraphicObjectChangeableInterface>) => {
     setObjects(prev =>
       prev.map(obj => {
         if (selectedObjectsID.indexOf(obj.id) === -1) return obj;
@@ -113,6 +150,7 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
             clearSelect,
             clear,
             updateByDiff,
+	    rotateGroup,
           }}
         >
           {children}
