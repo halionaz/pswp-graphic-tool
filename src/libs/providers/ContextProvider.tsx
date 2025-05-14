@@ -16,16 +16,15 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   const [selectedObjectsID, setSelectedObjectsID] = useState<string[]>([]);
 
   const add = (type: GraphicObjectType) => {
-    const scale = { height: 100, width: 100};
     const newObject: GraphicObjectInterface = {
       id: crypto.randomUUID(),
       type,
       color: '#919191',
       position: {
-        x: Math.max((window.innerWidth - scale.width) / 2, 0),
-        y: Math.max((window.innerHeight - scale.height) / 2, 0),
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
       }, // TODO: 현재 마우스 위치 or 선택된 오브젝트 옆에 생성
-      scale: scale,
+      scale: { width: 100, height: 100 },
       rotation: 0,
     };
     setObjects(prev => [...prev, newObject]);

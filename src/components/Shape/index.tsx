@@ -32,10 +32,15 @@ const Shape = ({
 
   const style: React.CSSProperties = {
     position: 'absolute',
-    backgroundColor: color,
-    transform: `translate3d(${position.x}px, ${position.y}px, 0) rotate(${rotation}deg)`,
+    left: position.x,
+    top: position.y,
+
     width: scale.width,
     height: scale.height,
+    transformOrigin: '50% 50%',
+    transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+    
+    backgroundColor: color,
     border: isSelected ? '#0a99ff 3px solid' : 'none',
     cursor: isDragging ? 'grabbing' : 'grab',
   };
