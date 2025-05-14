@@ -113,7 +113,7 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
       if (obj.id === id) targetObject = obj;
       return obj.id !== id;
     });
-    if (targetObject) {
+    if (targetObject && idx >= 0) {
       newObjects.splice(idx, 0, targetObject);
     }
     setObjects(newObjects);

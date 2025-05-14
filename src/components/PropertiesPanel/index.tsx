@@ -136,7 +136,7 @@ const PropertiesPanel = () => {
 
             return (
               <div
-                key={index}
+                key={val.id}
                 className={`${s.LayerItem} 
                   ${isSelected ? s.Selected : ''} 
                   ${isDragging ? s.Dragging : ''} 
