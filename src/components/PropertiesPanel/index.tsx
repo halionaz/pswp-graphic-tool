@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import s from './PropertiesPanel.module.css';
 import {
   ControllerContext,
@@ -12,13 +12,38 @@ const PropertiesPanel = () => {
   const controller = useContext(ControllerContext);
   const selectedObjects = useContext(SelectedObjectsContext);
 
+  const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
   const data = objects.filter(val => selectedObjects.indexOf(val.id) !== -1);
 
   const viewData = data[0];
 
   if (controller === undefined) return <div>Loading ...</div>;
 
-  const { update } = controller;
+  const { update, reorderLayers, select } = controller;
+
+  const handleDragStart = (id: string) => {
+    setDraggedItem(id);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setDragOverIndex(index);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedItem) {
+      reorderLayers(draggedItem, targetIndex);
+      setDraggedItem(null);
+      setDragOverIndex(null);
+    }
+  };
 
   return (
     <div className={s.Container}>
@@ -103,9 +128,31 @@ const PropertiesPanel = () => {
       )}
       <div>
         <h2>Layer</h2>
-        {objects.map((val, index) => {
-          return <div key={index}>{val.type}</div>;
-        })}
+        <div className={s.LayerList}>
+          {objects.map((val, index) => {
+            const isSelected = selectedObjects.indexOf(val.id) !== -1;
+            const isDragging = draggedItem === val.id;
+            const isDragOver = dragOverIndex === index;
+
+            return (
+              <div
+                key={index}
+                className={`${s.LayerItem} 
+                  ${isSelected ? s.Selected : ''} 
+                  ${isDragging ? s.Dragging : ''} 
+                  ${isDragOver ? s.DragOver : ''}`}
+                draggable
+                onDragStart={() => handleDragStart(val.id)}
+                onDragOver={e => handleDragOver(e, index)}
+                onDragLeave={handleDragLeave}
+                onDrop={e => handleDrop(e, index)}
+                onClick={() => select(val.id)}
+              >
+                {val.title}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
