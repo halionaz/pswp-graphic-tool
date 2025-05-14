@@ -13,6 +13,8 @@ interface ControllerContextInterface {
   select: (id: string) => void;
   clearSelect: () => void;
   clear: () => void;
+  reorderLayers: (id: string, idx: number) => void;
+  withSelect: (id: string) => void;
 }
 
 export const ObjectsContext = createContext<GraphicObjectInterface[]>([]);

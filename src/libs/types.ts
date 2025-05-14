@@ -25,6 +25,7 @@ export interface GraphicObjectChangeableInterface {
 export interface GraphicObjectInterface
   extends GraphicObjectChangeableInterface {
   id: string;
+  title: string;
   type: GraphicObjectType;
   color: string;
 }

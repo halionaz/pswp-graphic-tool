@@ -15,27 +15,31 @@ const Canvas = () => {
 
   if (controller === undefined) return <div>Loading . . .</div>;
 
-  const { updateByDiff, select, clearSelect } = controller;
+  const { updateByDiff, select, clearSelect, withSelect } = controller;
 
   return (
     <div className={s.Canvas} onMouseDown={clearSelect}>
-      {objects.map(({ type, color, position, scale, id, rotation }, index) => {
-        return (
-          <Shape
-            key={index}
-            type={type}
-            isSelected={selectedIndex.indexOf(id) !== -1}
-            color={color}
-            scale={scale}
-            rotation={rotation}
-            position={position}
-            updatePosition={(diff: PositionType) =>
-              updateByDiff({ position: diff })
-            }
-            setIsSelected={() => select(id)}
-          />
-        );
-      })}
+      {objects
+        .slice(0)
+        .reverse()
+        .map(({ type, color, position, scale, id, rotation }, index) => {
+          return (
+            <Shape
+              key={index}
+              type={type}
+              isSelected={selectedIndex.indexOf(id) !== -1}
+              color={color}
+              scale={scale}
+              rotation={rotation}
+              position={position}
+              updatePosition={(diff: PositionType) =>
+                updateByDiff({ position: diff })
+              }
+              select={() => select(id)}
+              withSelect={() => withSelect(id)}
+            />
+          );
+        })}
     </div>
   );
 };
