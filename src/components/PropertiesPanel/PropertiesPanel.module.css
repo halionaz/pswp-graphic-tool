@@ -4,7 +4,50 @@
   right: 0;
   height: 100vh;
   width: 300px;
-  background-color: cornsilk;
+  background-color: #ffffff;
   border-left: solid 2px gray;
   padding: 5px;
+}
+
+.LayerList {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.LayerItem {
+  padding: 4px 8px;
+  margin: 2px 0;
+  border-radius: 1.5px;
+  transition: background-color 0.1s;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #191919;
+}
+
+.LayerItem:hover {
+  background-color: #f3f3f3;
+}
+
+.LayerItem.Selected {
+  background-color: #e5f4ff;
+}
+
+.LayerItem.Dragging {
+  opacity: 0.5;
+}
+
+.LayerItem.DragOver {
+  background-color: #f3f3f3;
+  position: relative;
+}
+
+.LayerItem.DragOver::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -2px;
+  height: 2px;
+  background-color: #000000;
 }

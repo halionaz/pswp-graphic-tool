@@ -18,17 +18,18 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   const add = (type: GraphicObjectType) => {
     const newObject: GraphicObjectInterface = {
       id: crypto.randomUUID(),
+      title: `new ${type}`,
       type,
-      color: '#919191',
+      color: '#D9D9D9',
       position: {
         x: window.innerWidth / 2,
         y: window.innerHeight / 2,
-      }, // TODO: 현재 마우스 위치 or 선택된 오브젝트 옆에 생성
+      },
       scale: { width: 100, height: 100 },
       rotation: 0,
     };
-    setObjects(prev => [...prev, newObject]);
-    setSelectedObjectsID(prev => [...prev, newObject.id]);
+    setObjects(prev => [newObject, ...prev]);
+    setSelectedObjectsID([newObject.id]);
   };
 
   const remove = () => {
@@ -87,6 +88,12 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
 
   const select = (id: string) => {
     if (selectedObjectsID.indexOf(id) === -1) {
+      setSelectedObjectsID([id]);
+    }
+  };
+
+  const withSelect = (id: string) => {
+    if (selectedObjectsID.indexOf(id) === -1) {
       setSelectedObjectsID(prev => [...prev, id]);
     }
   };
@@ -100,6 +107,18 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     setObjects([]);
   };
 
+  const reorderLayers = (id: string, idx: number) => {
+    let targetObject: GraphicObjectInterface | null = null;
+    const newObjects = objects.filter(obj => {
+      if (obj.id === id) targetObject = obj;
+      return obj.id !== id;
+    });
+    if (targetObject && idx >= 0) {
+      newObjects.splice(idx, 0, targetObject);
+    }
+    setObjects(newObjects);
+  };
+
   return (
     <ObjectsContext.Provider value={objects}>
       <SelectedObjectsContext.Provider value={selectedObjectsID}>
@@ -109,9 +128,11 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
             remove,
             update,
             select,
+            withSelect,
             clearSelect,
             clear,
             updateByDiff,
+            reorderLayers,
           }}
         >
           {children}

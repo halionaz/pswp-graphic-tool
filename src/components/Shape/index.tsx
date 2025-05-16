@@ -9,14 +9,16 @@ import Rectangle from '@/components/Shape/Rectangle';
 
 interface Props extends GraphicObjectViewInterface {
   type: GraphicObjectType;
-  setIsSelected: () => void;
+  select: () => void;
+  withSelect: () => void;
   updatePosition: (diff: PositionType) => void;
 }
 
 const Shape = ({
   type,
   updatePosition,
-  setIsSelected,
+  select,
+  withSelect,
   color,
   position,
   scale,
@@ -26,7 +28,13 @@ const Shape = ({
   const { dragRef, handleMouseDown, isDragging } = useDrag(updatePosition);
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    setIsSelected();
+    if (e.shiftKey) {
+      // shift가 함께 눌린 상태라면 withSelect
+      withSelect();
+    } else {
+      // 그렇지 않다면 select
+      select();
+    }
     handleMouseDown(e);
   };
 
@@ -39,7 +47,7 @@ const Shape = ({
     height: scale.height,
     transformOrigin: '50% 50%',
     transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
-    
+
     backgroundColor: color,
     border: isSelected ? '#0a99ff 3px solid' : 'none',
     cursor: isDragging ? 'grabbing' : 'grab',
