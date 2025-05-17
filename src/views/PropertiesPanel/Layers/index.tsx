@@ -3,7 +3,7 @@ import {
   ControllerContext,
   ObjectsContext,
   SelectedObjectsContext,
-} from '@/libs/context/GraphicEditorContext';
+} from '@/viewModel/GraphicEditorContext';
 
 import s from './Layers.module.css';
 
@@ -14,8 +14,6 @@ const Layers = () => {
 
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
-
-  if (controller === undefined) return <div>Loading ...</div>;
 
   const { reorderLayers, select } = controller;
 

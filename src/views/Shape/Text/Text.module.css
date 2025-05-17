@@ -6,4 +6,6 @@
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-all;
+  width: fit-content;
+  height: fit-content;
 }

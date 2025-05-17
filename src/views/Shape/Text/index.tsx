@@ -1,10 +1,15 @@
 import { forwardRef } from 'react';
-import { ShapeViewProps } from '@/libs/types';
 
 import s from './Text.module.css';
 
-const Text = forwardRef<HTMLDivElement, ShapeViewProps>(
-  ({ style, onMouseDown }, ref) => {
+import { ShapeViewProps } from '@/views/Shape/types';
+import { TextInterface } from '@/models/GraphicObjectModel';
+
+interface TextViewProps extends ShapeViewProps {
+  object: TextInterface;
+}
+const Text = forwardRef<HTMLDivElement, TextViewProps>(
+  ({ style, onMouseDown, object }, ref) => {
     return (
       <div
         ref={ref}
@@ -12,14 +17,12 @@ const Text = forwardRef<HTMLDivElement, ShapeViewProps>(
         style={{
           ...style,
           cursor: 'text',
-          width: 'fit-content',
-          height: 'fit-content',
         }}
         onMouseDown={onMouseDown}
         contentEditable
         suppressContentEditableWarning
       >
-        텍스트를 입력하세요
+        {object.text}
       </div>
     );
   }

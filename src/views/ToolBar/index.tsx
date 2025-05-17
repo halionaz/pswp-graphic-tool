@@ -1,11 +1,11 @@
-import { ControllerContext } from '@/libs/context/GraphicEditorContext';
+import { ControllerContext } from '@/viewModel/GraphicEditorContext';
 import { useContext } from 'react';
 
 import s from './ToolBar.module.css';
 
 const ToolBar = () => {
   const controller = useContext(ControllerContext);
-  if (controller === undefined) return <div>Loading . . .</div>;
+
   return (
     <div className={s.Wrapper}>
       <button onClick={() => controller.add('rectangle')}>Rectangle</button>

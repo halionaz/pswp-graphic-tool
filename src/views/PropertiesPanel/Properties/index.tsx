@@ -6,7 +6,7 @@ import {
   ControllerContext,
   ObjectsContext,
   SelectedObjectsContext,
-} from '@/libs/context/GraphicEditorContext';
+} from '@/viewModel/GraphicEditorContext';
 
 const Properties = () => {
   // TODO: View, Controller 분리 & 정리
@@ -18,7 +18,6 @@ const Properties = () => {
 
   const viewData = data[0];
 
-  if (controller === undefined) return <div>Loading ...</div>;
   if (viewData === undefined) return null;
 
   const { update } = controller;
@@ -84,7 +83,7 @@ const Properties = () => {
           />
         </div>
       </div>
-      <div className={s.FormContainer}>
+      {/* <div className={s.FormContainer}>
         <div className={s.InputForm}>
           <label>Width</label>
           <input
@@ -111,7 +110,7 @@ const Properties = () => {
             }
           />
         </div>
-      </div>
+      </div> */}
       <div className={s.InputForm}>
         <label>Color</label>
         <input
