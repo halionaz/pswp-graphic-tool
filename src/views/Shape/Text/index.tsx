@@ -17,6 +17,8 @@ const Text = forwardRef<HTMLDivElement, TextViewProps>(
         style={{
           ...style,
           cursor: 'text',
+          color: object.textColor,
+          fontSize: object.textSize,
         }}
         onMouseDown={onMouseDown}
         contentEditable

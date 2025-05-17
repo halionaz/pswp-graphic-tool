@@ -9,7 +9,7 @@ import {
 } from '@/viewModel/GraphicEditorContext';
 
 const Properties = () => {
-  // TODO: View, Controller 분리 & 정리
+  // TODO: 타입별로 다른 프로퍼티 창 디자인 패턴 적용
   const objects = useContext(ObjectsContext);
   const controller = useContext(ControllerContext);
   const selectedObjects = useContext(SelectedObjectsContext);
@@ -19,6 +19,14 @@ const Properties = () => {
   const viewData = data[0];
 
   if (viewData === undefined) return null;
+
+  const hasScale =
+    viewData.type === 'rectangle' ||
+    viewData.type === 'ellipse' ||
+    viewData.type === 'image';
+  const isText = viewData.type === 'text';
+  const isLine = viewData.type === 'line';
+  const isImage = viewData.type === 'image';
 
   const { update } = controller;
 
@@ -83,34 +91,62 @@ const Properties = () => {
           />
         </div>
       </div>
-      {/* <div className={s.FormContainer}>
-        <div className={s.InputForm}>
-          <label>Width</label>
-          <input
-            className={s.Input}
-            type="number"
-            value={viewData.scale.width}
-            onChange={e =>
-              update({
-                scale: { ...viewData.scale, width: Number(e.target.value) },
-              })
-            }
-          />
+      {hasScale && (
+        <div className={s.FormContainer}>
+          <div className={s.InputForm}>
+            <label>Width</label>
+            <input
+              className={s.Input}
+              type="number"
+              value={viewData.scale.width}
+              onChange={e =>
+                update({
+                  scale: { ...viewData.scale, width: Number(e.target.value) },
+                })
+              }
+            />
+          </div>
+          <div className={s.InputForm}>
+            <label>Height</label>
+            <input
+              className={s.Input}
+              type="number"
+              value={viewData.scale.height}
+              onChange={e =>
+                update({
+                  scale: { ...viewData.scale, height: Number(e.target.value) },
+                })
+              }
+            />
+          </div>
         </div>
-        <div className={s.InputForm}>
-          <label>Height</label>
-          <input
-            className={s.Input}
-            type="number"
-            value={viewData.scale.height}
-            onChange={e =>
-              update({
-                scale: { ...viewData.scale, height: Number(e.target.value) },
-              })
-            }
-          />
+      )}
+      {isLine && (
+        <div className={s.FormContainer}>
+          <div className={s.InputForm}>
+            <label>Length</label>
+            <input
+              className={s.Input}
+              type="number"
+              value={viewData.length}
+              onChange={e => update({ length: Number(e.target.value) })}
+            />
+          </div>
+          <div className={s.InputForm}>
+            <label>Stroke</label>
+            <input
+              className={s.Input}
+              type="number"
+              value={viewData.strokeWidth}
+              onChange={e =>
+                update({
+                  strokeWidth: Number(e.target.value),
+                })
+              }
+            />
+          </div>
         </div>
-      </div> */}
+      )}
       <div className={s.InputForm}>
         <label>Color</label>
         <input
@@ -123,6 +159,46 @@ const Properties = () => {
           }
         />
       </div>
+      {isImage && (
+        <div className={s.InputForm}>
+          <label>Image</label>
+          <input
+            type="file"
+            onChange={e => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                  update({ imgSrc: reader.result as string });
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+          />
+        </div>
+      )}
+      {isText && (
+        <div className={s.FormContainer}>
+          <div className={s.InputForm}>
+            <label>Text Color</label>
+            <input
+              type="color"
+              value={viewData.textColor}
+              onChange={e => update({ textColor: e.target.value })}
+            />
+          </div>
+          <div className={s.InputForm}>
+            <label>Font Size</label>
+            <input
+              className={s.Input}
+              type="number"
+              value={viewData.textSize}
+              onChange={e => update({ textSize: Number(e.target.value) })}
+            />
+          </div>
+          <div className={s.InputForm}></div>
+        </div>
+      )}
     </div>
   );
 };
