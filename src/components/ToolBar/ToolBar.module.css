@@ -1,5 +1,12 @@
 .Wrapper {
   position: fixed;
-  left: 0;
+  left: 10px;
+  top: 10px;
   z-index: 100;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
