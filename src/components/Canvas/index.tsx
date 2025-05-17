@@ -22,10 +22,10 @@ const Canvas = () => {
       {objects
         .slice(0)
         .reverse()
-        .map(({ type, color, position, scale, id, rotation }, index) => {
+        .map(({ type, color, position, scale, id, rotation }) => {
           return (
             <Shape
-              key={index}
+              key={id}
               type={type}
               isSelected={selectedIndex.indexOf(id) !== -1}
               color={color}

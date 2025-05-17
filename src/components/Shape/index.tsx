@@ -6,6 +6,9 @@ import {
 } from '@/libs/types';
 import Ellipse from '@/components/Shape/Ellipse';
 import Rectangle from '@/components/Shape/Rectangle';
+import Line from '@/components/Shape/Line';
+import Image from '@/components/Shape/Image';
+import Text from '@/components/Shape/Text';
 
 interface Props extends GraphicObjectViewInterface {
   type: GraphicObjectType;
@@ -59,6 +62,12 @@ const Shape = ({
       return <Rectangle {...shapeProps} />;
     case 'ellipse':
       return <Ellipse {...shapeProps} />;
+    case 'line':
+      return <Line {...shapeProps} />;
+    case 'image':
+      return <Image {...shapeProps} />;
+    case 'text':
+      return <Text {...shapeProps} />;
   }
 };
 export default Shape;
