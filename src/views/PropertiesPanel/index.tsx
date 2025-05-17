@@ -1,7 +1,6 @@
+import Properties from '@/views/PropertiesPanel/Properties';
 import s from './PropertiesPanel.module.css';
-
-import Layers from '@/components/PropertiesPanel/Layers';
-import Properties from '@/components/PropertiesPanel/Properties';
+import Layers from '@/views/PropertiesPanel/Layers';
 
 const PropertiesPanel = () => {
   return (

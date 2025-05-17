@@ -1,4 +1,4 @@
-import { PositionType } from '@/libs/types';
+import { PositionType } from '@/models/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const useDrag = (updatePosition: (diff: PositionType) => void) => {
