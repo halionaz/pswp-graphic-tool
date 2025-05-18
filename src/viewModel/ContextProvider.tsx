@@ -4,30 +4,20 @@ import {
   ControllerContext,
   ObjectsContext,
   SelectedObjectsContext,
-} from '@/libs/context/GraphicEditorContext';
+} from '@/viewModel/GraphicEditorContext';
+import { PositionType } from '@/models/types';
 import {
-  GraphicObjectChangeableInterface,
   GraphicObjectInterface,
   GraphicObjectType,
-} from '@/libs/types';
+} from '@/models/GraphicObjectModel';
+import objectFactory from '@/viewModel/ObjectFactory';
 
 const ContextProvider = ({ children }: PropsWithChildren) => {
   const [objects, setObjects] = useState<GraphicObjectInterface[]>([]);
   const [selectedObjectsID, setSelectedObjectsID] = useState<string[]>([]);
 
   const add = (type: GraphicObjectType) => {
-    const newObject: GraphicObjectInterface = {
-      id: crypto.randomUUID(),
-      title: `new ${type}`,
-      type,
-      color: '#D9D9D9',
-      position: {
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
-      },
-      scale: { width: 100, height: 100 },
-      rotation: 0,
-    };
+    const newObject = objectFactory(type);
     setObjects(prev => [newObject, ...prev]);
     setSelectedObjectsID([newObject.id]);
   };
@@ -43,7 +33,9 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
    * 새로운 값을 넣어 프로퍼티를 업데이트합니다.
    * @param updateProperties 새로운 값입니다.
    */
-  const update = (updateProperties: Partial<GraphicObjectInterface>) => {
+  const update = <T extends GraphicObjectInterface>(
+    updateProperties: Partial<T>
+  ) => {
     setObjects(prev =>
       prev.map(obj =>
         selectedObjectsID.indexOf(obj.id) === -1
@@ -54,33 +46,19 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   /**
-   * diff를 넣어 프로퍼티를 업데이트합니다.
-   * @param diff 달라지는 값 정보입니다. position, rotation, scale을 지정할 수 있습니다.
+   * diff를 넣어 오브젝트를 이동시킵니다.
+   * @param diff 달라지는 위치 값 정보입니다.
    */
-  const updateByDiff = (diff: Partial<GraphicObjectChangeableInterface>) => {
+  const move = (diff: PositionType) => {
     setObjects(prev =>
       prev.map(obj => {
         if (selectedObjectsID.indexOf(obj.id) === -1) return obj;
-
-        const updateProperties = {
-          position: diff.position
-            ? {
-                x: obj.position.x + diff.position.x,
-                y: obj.position.y + diff.position.y,
-              }
-            : obj.position,
-          rotation: diff.rotation ? obj.rotation + diff.rotation : obj.rotation,
-          scale: diff.scale
-            ? {
-                width: obj.scale.width + diff.scale.width,
-                height: obj.scale.height + diff.scale.height,
-              }
-            : obj.scale,
-        };
-
         return {
           ...obj,
-          ...updateProperties,
+          position: {
+            x: obj.position.x + diff.x,
+            y: obj.position.y + diff.y,
+          },
         };
       })
     );
@@ -131,7 +109,7 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
             withSelect,
             clearSelect,
             clear,
-            updateByDiff,
+            move,
             reorderLayers,
           }}
         >
