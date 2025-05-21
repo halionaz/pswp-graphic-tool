@@ -1,26 +1,40 @@
-import { useContext } from 'react';
-import s from './Canvas.module.css';
-import {
-  ControllerContext,
-  ObjectsContext,
-} from '@/viewModel/GraphicEditorContext';
-import Shape from '@/views/Shape';
+import { useRef } from 'react';
+import styles from './Canvas.module.css';
+import useContextMenu from '@/libs/hooks/useContextMenu';
+import ContextMenu from '@/views/ContextMenu';
+import { buildMenu } from '@/viewModel/context-menu';
+import ShapeLayer from '@/views/Shape';              // adjust if path differs
 
-const Canvas = () => {
-  const objects = useContext(ObjectsContext);
-  const controller = useContext(ControllerContext);
-
-  const { clearSelect } = controller;
+export default function Canvas() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { req, open, close } = useContextMenu();
 
   return (
-    <div className={s.Canvas} onMouseDown={clearSelect}>
-      {objects
-        .slice(0)
-        .reverse()
-        .map(object => {
-          return <Shape key={object.id} object={object} />;
-        })}
-    </div>
+    <>
+      <div
+        ref={ref}
+        className={styles.canvas}
+        onContextMenu={(e) => open(e, 'canvas')}
+      >
+        <ShapeLayer
+          onShapeContextMenu={(e: React.MouseEvent, id: string) =>
+            open(e, 'shape', [id])
+          }
+          onGroupContextMenu={(
+            e: React.MouseEvent,
+            ids: string[],
+          ) => open(e, 'group', ids)}
+        />
+      </div>
+
+      {req && (
+        <ContextMenu
+          x={req.x}
+          y={req.y}
+          items={buildMenu(req)}
+          onClose={close}
+        />
+      )}
+    </>
   );
-};
-export default Canvas;
+}
