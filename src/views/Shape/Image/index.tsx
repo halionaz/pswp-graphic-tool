@@ -2,12 +2,13 @@ import { forwardRef } from 'react';
 
 import { ShapeViewProps } from '@/views/Shape/types';
 import { ImageInterface } from '@/models/GraphicObjectModel';
+import Handlers from '@/views/Shape/Handlers';
 
 interface ImageViewProps extends ShapeViewProps {
   object: ImageInterface;
 }
 const Image = forwardRef<HTMLDivElement, ImageViewProps>(
-  ({ style, onMouseDown, object }, ref) => {
+  ({ style, onMouseDown, object, isSelected }, ref) => {
     return (
       <div
         ref={ref}
@@ -21,7 +22,9 @@ const Image = forwardRef<HTMLDivElement, ImageViewProps>(
           backgroundRepeat: 'no-repeat',
         }}
         onMouseDown={onMouseDown}
-      />
+      >
+        {isSelected && <Handlers object={object} />}
+      </div>
     );
   }
 );
