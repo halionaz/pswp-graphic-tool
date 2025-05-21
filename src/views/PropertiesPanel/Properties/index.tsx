@@ -9,7 +9,6 @@ import {
 } from '@/viewModel/GraphicEditorContext';
 
 const Properties = () => {
-  // TODO: 타입별로 다른 프로퍼티 창 디자인 패턴 적용
   const objects = useContext(ObjectsContext);
   const controller = useContext(ControllerContext);
   const selectedObjects = useContext(SelectedObjectsContext);

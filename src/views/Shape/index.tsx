@@ -51,6 +51,7 @@ const Shape = ({ object }: Props) => {
     style: sharedStyle,
     ref: dragRef,
     onMouseDown,
+    isSelected,
   };
 
   switch (object.type) {
