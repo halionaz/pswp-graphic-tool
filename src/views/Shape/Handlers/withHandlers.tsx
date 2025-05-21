@@ -11,7 +11,6 @@ const withHandlers = <T extends ShapeViewProps>(
   return function WithHandlers(
     props: T & { object: GraphicObjectInterface & { scale: ScaleType } }
   ) {
-    console.log(props.isSelected);
     return (
       <>
         {props.isSelected && (

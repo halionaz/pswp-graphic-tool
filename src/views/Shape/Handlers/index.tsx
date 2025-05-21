@@ -11,7 +11,6 @@ interface Props {
 }
 
 const Handlers = ({ object }: Props) => {
-  console.log('Handlers');
   const controller = useContext(ControllerContext);
   const { update } = controller;
   const [isResizing, setIsResizing] = useState<
