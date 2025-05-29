@@ -1,0 +1,40 @@
+.
+├── App.tsx
+├── dir.txt
+├── index.css
+├── libs
+│   ├── hooks
+│   │   └── useDrag.ts
+│   └── utils
+│       └── getTranslateValues.ts
+├── main.tsx
+├── models
+│   ├── GraphicObjectModel.ts
+│   └── types.ts
+├── viewModel
+│   ├── ContextProvider.tsx
+│   ├── GraphicEditorContext.ts
+│   └── ObjectFactory.ts
+├── views
+│   ├── Canvas
+│   │   ├── Canvas.module.css
+│   │   └── index.tsx
+│   ├── PropertiesPanel
+│   │   ├── index.tsx
+│   │   ├── Layers
+│   │   ├── Properties
+│   │   └── PropertiesPanel.module.css
+│   ├── Shape
+│   │   ├── Ellipse
+│   │   ├── Image
+│   │   ├── index.tsx
+│   │   ├── Line
+│   │   ├── Rectangle
+│   │   ├── Text
+│   │   └── types.ts
+│   └── ToolBar
+│       ├── index.tsx
+│       └── ToolBar.module.css
+└── vite-env.d.ts
+
+18 directories, 20 files
