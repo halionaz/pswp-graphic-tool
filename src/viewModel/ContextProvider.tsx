@@ -1,115 +1,73 @@
-import { PropsWithChildren, useState } from 'react';
-
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import {
   ControllerContext,
   ObjectsContext,
   SelectedObjectsContext,
-} from '@/viewModel/GraphicEditorContext';
-import { PositionType } from '@/models/types';
+} from './GraphicEditorContext';
 import {
   GraphicObjectInterface,
   GraphicObjectType,
 } from '@/models/GraphicObjectModel';
-import objectFactory from '@/viewModel/ObjectFactory';
+import { PositionType } from '@/models/types';
+import GraphicEditorModel from '@/models/GraphicEditorModel';
 
 const ContextProvider = ({ children }: PropsWithChildren) => {
-  const [objects, setObjects] = useState<GraphicObjectInterface[]>([]);
-  const [selectedObjectsID, setSelectedObjectsID] = useState<string[]>([]);
+  /* ---------- 1 모델 한 개 생성 ---------- */
+  const modelRef = useRef<GraphicEditorModel>();
+  if (!modelRef.current) modelRef.current = new GraphicEditorModel();
+  const model = modelRef.current;
 
+  /* ---------- 2 React 쪽에 스냅샷만 보여준다 ---------- */
+  const [objects, setObjects] = useState<GraphicObjectInterface[]>(model.snapshot);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  /* 모델이 notify()될 때마다 스냅샷 갱신 */
+  useEffect(() => {
+    const unsubscribe = model.subscribe(() => setObjects(model.snapshot));
+    return unsubscribe;
+  }, [model]);
+
+  /* ---------- 3 컨트롤러(커맨드 프록시) ---------- */
   const add = (type: GraphicObjectType) => {
-    const newObject = objectFactory(type);
-    setObjects(prev => [newObject, ...prev]);
-    setSelectedObjectsID([newObject.id]);
+    const obj = model.add(type);
+    setSelectedIds([obj.id]);
   };
 
   const remove = () => {
-    setObjects(prev =>
-      prev.filter(({ id }) => selectedObjectsID.indexOf(id) === -1)
-    );
+    model.remove(selectedIds);
     clearSelect();
   };
 
-  /**
-   * 새로운 값을 넣어 프로퍼티를 업데이트합니다.
-   * @param updateProperties 새로운 값입니다.
-   */
-  const update = <T extends GraphicObjectInterface>(
-    updateProperties: Partial<T>
-  ) => {
-    setObjects(prev =>
-      prev.map(obj =>
-        selectedObjectsID.indexOf(obj.id) === -1
-          ? obj
-          : { ...obj, ...updateProperties }
-      )
-    );
-  };
+  const update = (patch: Partial<GraphicObjectInterface>) =>
+    model.update(selectedIds, patch);
 
-  /**
-   * diff를 넣어 오브젝트를 이동시킵니다.
-   * @param diff 달라지는 위치 값 정보입니다.
-   */
-  const move = (diff: PositionType) => {
-    setObjects(prev =>
-      prev.map(obj => {
-        if (selectedObjectsID.indexOf(obj.id) === -1) return obj;
-        return {
-          ...obj,
-          position: {
-            x: obj.position.x + diff.x,
-            y: obj.position.y + diff.y,
-          },
-        };
-      })
-    );
-  };
+  const move = (diff: PositionType) => model.move(selectedIds, diff);
 
-  const select = (id: string) => {
-    if (selectedObjectsID.indexOf(id) === -1) {
-      setSelectedObjectsID([id]);
-    }
-  };
-
-  const withSelect = (id: string) => {
-    if (selectedObjectsID.indexOf(id) === -1) {
-      setSelectedObjectsID(prev => [...prev, id]);
-    }
-  };
-
-  const clearSelect = () => {
-    setSelectedObjectsID([]);
-  };
+  const select = (id: string) => setSelectedIds([id]);
+  const withSelect = (id: string) =>
+    setSelectedIds(prev => (prev.includes(id) ? prev : [...prev, id]));
+  const clearSelect = () => setSelectedIds([]);
 
   const clear = () => {
     clearSelect();
-    setObjects([]);
+    model.remove(model.snapshot.map(o => o.id));
   };
 
-  const reorderLayers = (id: string, idx: number) => {
-    let targetObject: GraphicObjectInterface | null = null;
-    const newObjects = objects.filter(obj => {
-      if (obj.id === id) targetObject = obj;
-      return obj.id !== id;
-    });
-    if (targetObject && idx >= 0) {
-      newObjects.splice(idx, 0, targetObject);
-    }
-    setObjects(newObjects);
-  };
+  const reorderLayers = (id: string, idx: number) => model.reorder(id, idx);
 
   return (
     <ObjectsContext.Provider value={objects}>
-      <SelectedObjectsContext.Provider value={selectedObjectsID}>
+      <SelectedObjectsContext.Provider value={selectedIds}>
         <ControllerContext.Provider
           value={{
             add,
             remove,
             update,
+            move,
             select,
             withSelect,
             clearSelect,
             clear,
-            move,
             reorderLayers,
           }}
         >
