@@ -12,13 +12,16 @@ import { PositionType } from '@/models/types';
 import GraphicEditorModel from '@/models/GraphicEditorModel';
 
 const ContextProvider = ({ children }: PropsWithChildren) => {
-  /* ---------- 1 모델 한 개 생성 ---------- */
-  const modelRef = useRef<GraphicEditorModel>();
-  if (!modelRef.current) modelRef.current = new GraphicEditorModel();
+  // ref를 통해 Model은 한 번만 생성되도록 함
+  const modelRef = useRef<GraphicEditorModel>(new GraphicEditorModel());
   const model = modelRef.current;
 
-  /* ---------- 2 React 쪽에 스냅샷만 보여준다 ---------- */
-  const [objects, setObjects] = useState<GraphicObjectInterface[]>(model.snapshot);
+  // React에서는 Model의 스냅샷, 복제본만 렌더링
+  // TODO: 흠 근데 각 오브젝트 View Model이 각각 모델을 구독하고 있어야 하지 않을까
+  // TODO: objects State 없애기
+  const [objects, setObjects] = useState<GraphicObjectInterface[]>(
+    model.snapshot
+  );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   /* 모델이 notify()될 때마다 스냅샷 갱신 */
@@ -53,7 +56,7 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     model.remove(model.snapshot.map(o => o.id));
   };
 
-  const reorderLayers = (id: string, idx: number) => model.reorder(id, idx);
+  const reorderLayers = model.reorder;
 
   return (
     <ObjectsContext.Provider value={objects}>

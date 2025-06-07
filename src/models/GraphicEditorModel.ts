@@ -6,16 +6,17 @@ import {
 import { PositionType } from './types';
 import objectFactory from '@/viewModel/ObjectFactory';
 
-interface Command {
-  execute(): void;
-  undo(): void;
-}
+// TODO: 커맨드 패턴 적용
+// interface Command {
+//   execute(): void;
+//   undo(): void;
+// }
 
 export default class GraphicEditorModel extends Observable {
   private objects: GraphicObjectInterface[] = [];
 
   get snapshot(): GraphicObjectInterface[] {
-    // React 리렌더를 유도하려면 얕은 복사본이 필요
+    // React 리렌더를 위해 항상 새로운 배열 반환
     return [...this.objects];
   }
 
@@ -27,15 +28,15 @@ export default class GraphicEditorModel extends Observable {
   }
 
   remove(ids: string[]) {
-    if (!ids.length) return;
+    if (ids.length === 0) return;
     this.objects = this.objects.filter(o => !ids.includes(o.id));
     this.notify();
   }
 
-  update(ids: string[], patch: Partial<GraphicObjectInterface>) {
-    if (!ids.length) return;
+  update<T extends GraphicObjectInterface>(ids: string[], patch: Partial<T>) {
+    if (ids.length === 0) return;
     this.objects = this.objects.map(o =>
-      ids.includes(o.id) ? { ...o, ...patch } : o,
+      ids.includes(o.id) ? { ...o, ...patch } : o
     );
     this.notify();
   }
@@ -48,7 +49,7 @@ export default class GraphicEditorModel extends Observable {
             ...o,
             position: { x: o.position.x + diff.x, y: o.position.y + diff.y },
           }
-        : o,
+        : o
     );
     this.notify();
   }
