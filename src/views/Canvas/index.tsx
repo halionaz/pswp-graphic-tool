@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import s from './Canvas.module.css';
 
-import { ControllerContext } from '@/viewModel/GraphicEditorContext';
+import { ControllerContext } from '@/models/GraphicEditorContext';
 import Shape from '@/views/Shape';
 import useSubscribe from '@/libs/hooks/useSubscribe';
 

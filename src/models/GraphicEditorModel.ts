@@ -4,7 +4,7 @@ import {
   GraphicObjectInterface,
 } from './GraphicObjectModel';
 import { PositionType } from './types';
-import objectFactory from '@/viewModel/ObjectFactory';
+import objectFactory from '@/models/ObjectFactory';
 
 // TODO: 커맨드 패턴 적용
 // interface Command {

@@ -2,14 +2,14 @@ import { useContext, useState } from 'react';
 
 import s from './Layers.module.css';
 
-import useObjectsSubscribe from '@/libs/hooks/useSubscribe';
+import useSubscribe from '@/libs/hooks/useSubscribe';
 import {
   ControllerContext,
   SelectedObjectsContext,
-} from '@/viewModel/GraphicEditorContext';
+} from '@/models/GraphicEditorContext';
 
 const Layers = () => {
-  const objects = useObjectsSubscribe();
+  const objects = useSubscribe();
   const selectedObjects = useContext(SelectedObjectsContext);
   const controller = useContext(ControllerContext);
 

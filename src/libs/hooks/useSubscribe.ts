@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 
 import useUpdateView from '@/libs/hooks/useUpdateView';
-import { ModelContext } from '@/viewModel/GraphicEditorContext';
+import { ModelContext } from '@/models/GraphicEditorContext';
 
 /**
  * 해당 훅을 사용한 컴포넌트에서 모델의 상태 변경을 구독합니다.

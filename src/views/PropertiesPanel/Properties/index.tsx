@@ -5,11 +5,11 @@ import s from './Properties.module.css';
 import {
   ControllerContext,
   SelectedObjectsContext,
-} from '@/viewModel/GraphicEditorContext';
-import useObjectsSubscribe from '@/libs/hooks/useSubscribe';
+} from '@/models/GraphicEditorContext';
+import useSubscribe from '@/libs/hooks/useSubscribe';
 
 const Properties = () => {
-  const objects = useObjectsSubscribe();
+  const objects = useSubscribe();
   const controller = useContext(ControllerContext);
   const selectedObjects = useContext(SelectedObjectsContext);
 
