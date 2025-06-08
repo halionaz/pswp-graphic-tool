@@ -1,13 +1,13 @@
 import { useContext } from 'react';
+
 import s from './Canvas.module.css';
-import {
-  ControllerContext,
-  ObjectsContext,
-} from '@/viewModel/GraphicEditorContext';
+
+import { ControllerContext } from '@/models/GraphicEditorContext';
 import Shape from '@/views/Shape';
+import useSubscribe from '@/libs/hooks/useSubscribe';
 
 const Canvas = () => {
-  const objects = useContext(ObjectsContext);
+  const objects = useSubscribe();
   const controller = useContext(ControllerContext);
 
   const { clearSelect } = controller;

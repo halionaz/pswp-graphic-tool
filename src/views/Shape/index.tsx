@@ -3,7 +3,7 @@ import { GraphicObjectInterface } from '@/models/GraphicObjectModel';
 import {
   ControllerContext,
   SelectedObjectsContext,
-} from '@/viewModel/GraphicEditorContext';
+} from '@/models/GraphicEditorContext';
 import Ellipse from '@/views/Shape/Ellipse';
 import Image from '@/views/Shape/Image';
 import Line from '@/views/Shape/Line';
