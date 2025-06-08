@@ -16,8 +16,7 @@ export default class GraphicEditorModel extends Observable {
   private objects: GraphicObjectInterface[] = [];
 
   get snapshot(): GraphicObjectInterface[] {
-    // React 리렌더를 위해 항상 새로운 배열 반환
-    return [...this.objects];
+    return this.objects;
   }
 
   add(type: GraphicObjectType): GraphicObjectInterface {

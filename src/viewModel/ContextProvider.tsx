@@ -1,7 +1,7 @@
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useRef, useState } from 'react';
 import {
   ControllerContext,
-  ObjectsContext,
+  ModelContext,
   SelectedObjectsContext,
 } from './GraphicEditorContext';
 import {
@@ -16,19 +16,7 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   const modelRef = useRef<GraphicEditorModel>(new GraphicEditorModel());
   const model = modelRef.current;
 
-  // React에서는 Model의 스냅샷, 복제본만 렌더링
-  // TODO: 흠 근데 각 오브젝트 View Model이 각각 모델을 구독하고 있어야 하지 않을까
-  // TODO: objects State 없애기
-  const [objects, setObjects] = useState<GraphicObjectInterface[]>(
-    model.snapshot
-  );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  /* 모델이 notify()될 때마다 스냅샷 갱신 */
-  useEffect(() => {
-    const unsubscribe = model.subscribe(() => setObjects(model.snapshot));
-    return unsubscribe;
-  }, [model]);
 
   /* ---------- 3 컨트롤러(커맨드 프록시) ---------- */
   const add = (type: GraphicObjectType) => {
@@ -56,10 +44,10 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     model.remove(model.snapshot.map(o => o.id));
   };
 
-  const reorderLayers = model.reorder;
+  const reorderLayers = (id: string, idx: number) => model.reorder(id, idx);
 
   return (
-    <ObjectsContext.Provider value={objects}>
+    <ModelContext.Provider value={model}>
       <SelectedObjectsContext.Provider value={selectedIds}>
         <ControllerContext.Provider
           value={{
@@ -77,7 +65,7 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
           {children}
         </ControllerContext.Provider>
       </SelectedObjectsContext.Provider>
-    </ObjectsContext.Provider>
+    </ModelContext.Provider>
   );
 };
 
