@@ -4,37 +4,35 @@
 ├── index.css
 ├── libs
 │   ├── hooks
-│   │   └── useDrag.ts
+│   │   ├── useDrag.ts
+│   │   ├── useSubscribe.ts
+│   │   └── useUpdateView.ts
 │   └── utils
 │       └── getTranslateValues.ts
 ├── main.tsx
 ├── models
-│   ├── GraphicObjectModel.ts
-│   └── types.ts
-├── viewModel
 │   ├── ContextProvider.tsx
 │   ├── GraphicEditorContext.ts
-│   └── ObjectFactory.ts
+│   ├── GraphicEditorModel.ts
+│   ├── GraphicObjectModel.ts
+│   ├── ObjectFactory.ts
+│   ├── Observables.ts
+│   └── types.ts
 ├── views
 │   ├── Canvas
-│   │   ├── Canvas.module.css
-│   │   └── index.tsx
 │   ├── PropertiesPanel
-│   │   ├── index.tsx
 │   │   ├── Layers
-│   │   ├── Properties
-│   │   └── PropertiesPanel.module.css
+│   │   └── Properties
 │   ├── Shape
 │   │   ├── Ellipse
+│   │   ├── Handlers
+│   │   │   ├── index.tsx
+│   │   │   └── withHandlers.tsx
 │   │   ├── Image
-│   │   ├── index.tsx
 │   │   ├── Line
 │   │   ├── Rectangle
-│   │   ├── Text
-│   │   └── types.ts
+│   │   └── Text
 │   └── ToolBar
-│       ├── index.tsx
-│       └── ToolBar.module.css
 └── vite-env.d.ts
 
 18 directories, 20 files

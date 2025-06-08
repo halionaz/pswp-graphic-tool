@@ -1,4 +1,4 @@
-import { ControllerContext } from '@/viewModel/GraphicEditorContext';
+import { ControllerContext } from '@/models/GraphicEditorContext';
 import { useContext } from 'react';
 
 import s from './ToolBar.module.css';

@@ -1,3 +1,4 @@
+import GraphicEditorModel from '@/models/GraphicEditorModel';
 import {
   GraphicObjectInterface,
   GraphicObjectType,
@@ -17,7 +18,7 @@ interface ControllerContextInterface {
   withSelect: (id: string) => void;
 }
 
-export const ObjectsContext = createContext<GraphicObjectInterface[]>([]);
+export const ModelContext = createContext<GraphicEditorModel | null>(null);
 export const SelectedObjectsContext = createContext<string[]>([]);
 export const ControllerContext = createContext<ControllerContextInterface>({
   add: () => {},
