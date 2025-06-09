@@ -8,7 +8,7 @@ import { PositionType } from '@/models/types';
 export abstract class Command {
   private prevStates: GraphicObjectInterface[] = [];
   execute() {
-    this.prevStates = model.snapshot;
+    this.prevStates = [...model.snapshot];
   }
   undo() {
     model.restore(this.prevStates);
