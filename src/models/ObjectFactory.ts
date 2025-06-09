@@ -6,7 +6,7 @@ import {
   LineInterface,
   RectangleInterface,
   TextInterface,
-} from '@/models/GraphicObjectModel';
+} from '@/models/GraphicObjectInterface';
 
 const objectFactory = (type: GraphicObjectType) => {
   const newObjectBase: GraphicObjectInterfaceBase = {

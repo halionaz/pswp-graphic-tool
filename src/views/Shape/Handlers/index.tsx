@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 
-import { GraphicObjectInterface } from '@/models/GraphicObjectModel';
+import { GraphicObjectInterface } from '@/models/GraphicObjectInterface';
 import { ScaleType } from '@/models/types';
-import { ControllerContext } from '@/models/GraphicEditorContext';
+import { CommandContext } from '@/commands/GraphicEditorContext';
 
 import s from './Handlers.module.css';
 
@@ -11,8 +11,8 @@ interface Props {
 }
 
 const Handlers = ({ object }: Props) => {
-  const controller = useContext(ControllerContext);
-  const { update } = controller;
+  const command = useContext(CommandContext);
+  const { update } = command;
   const [isResizing, setIsResizing] = useState<
     'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | null
   >(null);

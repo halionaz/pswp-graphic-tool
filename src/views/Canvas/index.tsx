@@ -2,15 +2,15 @@ import { useContext } from 'react';
 
 import s from './Canvas.module.css';
 
-import { ControllerContext } from '@/models/GraphicEditorContext';
 import Shape from '@/views/Shape';
-import useSubscribe from '@/libs/hooks/useSubscribe';
+import useSubscribe from '@/hooks/useSubscribe';
+import { CommandContext } from '@/commands/GraphicEditorContext';
 
 const Canvas = () => {
   const objects = useSubscribe();
-  const controller = useContext(ControllerContext);
+  const command = useContext(CommandContext);
 
-  const { clearSelect } = controller;
+  const { clearSelect } = command;
 
   return (
     <div className={s.Canvas} onMouseDown={clearSelect}>

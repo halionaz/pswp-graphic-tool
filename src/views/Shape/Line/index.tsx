@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
 import { ShapeViewProps } from '@/views/Shape/types';
-import { LineInterface } from '@/models/GraphicObjectModel';
+import { LineInterface } from '@/models/GraphicObjectInterface';
 
 interface LineViewProps extends ShapeViewProps {
   object: LineInterface;

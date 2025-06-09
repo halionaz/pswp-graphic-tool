@@ -1,12 +1,11 @@
-import GraphicEditorModel from '@/models/GraphicEditorModel';
 import {
   GraphicObjectInterface,
   GraphicObjectType,
-} from '@/models/GraphicObjectModel';
+} from '@/models/GraphicObjectInterface';
 import { PositionType } from '@/models/types';
 import { createContext } from 'react';
 
-interface ControllerContextInterface {
+interface CommandContextInterface {
   add: (type: GraphicObjectType) => void;
   remove: () => void;
   update: (updates: Partial<GraphicObjectInterface>) => void;
@@ -18,9 +17,8 @@ interface ControllerContextInterface {
   withSelect: (id: string) => void;
 }
 
-export const ModelContext = createContext<GraphicEditorModel | null>(null);
 export const SelectedObjectsContext = createContext<string[]>([]);
-export const ControllerContext = createContext<ControllerContextInterface>({
+export const CommandContext = createContext<CommandContextInterface>({
   add: () => {},
   remove: () => {},
   update: () => {},

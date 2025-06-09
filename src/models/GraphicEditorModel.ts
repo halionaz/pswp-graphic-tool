@@ -2,15 +2,9 @@ import { Observable } from './Observables';
 import {
   GraphicObjectType,
   GraphicObjectInterface,
-} from './GraphicObjectModel';
+} from './GraphicObjectInterface';
 import { PositionType } from './types';
 import objectFactory from '@/models/ObjectFactory';
-
-// TODO: 커맨드 패턴 적용
-// interface Command {
-//   execute(): void;
-//   undo(): void;
-// }
 
 export default class GraphicEditorModel extends Observable {
   private objects: GraphicObjectInterface[] = [];
@@ -60,6 +54,6 @@ export default class GraphicEditorModel extends Observable {
     this.objects.splice(targetIdx, 0, obj);
     this.notify();
   }
-
-  /* TODO: Undo/Redo */
 }
+
+export const model = new GraphicEditorModel();

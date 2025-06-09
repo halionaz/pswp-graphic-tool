@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
 import { ShapeViewProps } from '@/views/Shape/types';
-import { ImageInterface } from '@/models/GraphicObjectModel';
+import { ImageInterface } from '@/models/GraphicObjectInterface';
 import Handlers from '@/views/Shape/Handlers';
 
 interface ImageViewProps extends ShapeViewProps {

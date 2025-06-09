@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { ShapeViewProps } from '@/views/Shape/types';
-import { RectangleInterface } from '@/models/GraphicObjectModel';
+import { RectangleInterface } from '@/models/GraphicObjectInterface';
 import Handlers from '@/views/Shape/Handlers';
 
 interface RectangleViewProps extends ShapeViewProps {

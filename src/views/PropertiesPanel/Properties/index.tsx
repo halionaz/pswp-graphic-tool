@@ -3,14 +3,14 @@ import { useContext } from 'react';
 import s from './Properties.module.css';
 
 import {
-  ControllerContext,
+  CommandContext,
   SelectedObjectsContext,
-} from '@/models/GraphicEditorContext';
-import useSubscribe from '@/libs/hooks/useSubscribe';
+} from '@/commands/GraphicEditorContext';
+import useSubscribe from '@/hooks/useSubscribe';
 
 const Properties = () => {
   const objects = useSubscribe();
-  const controller = useContext(ControllerContext);
+  const command = useContext(CommandContext);
   const selectedObjects = useContext(SelectedObjectsContext);
 
   const data = objects.filter(val => selectedObjects.indexOf(val.id) !== -1);
@@ -27,7 +27,7 @@ const Properties = () => {
   const isLine = viewData.type === 'line';
   const isImage = viewData.type === 'image';
 
-  const { update } = controller;
+  const { update } = command;
 
   return (
     <div className={s.Container}>

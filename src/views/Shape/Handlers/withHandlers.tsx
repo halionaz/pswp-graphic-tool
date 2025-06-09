@@ -1,4 +1,4 @@
-import { GraphicObjectInterface } from '@/models/GraphicObjectModel';
+import { GraphicObjectInterface } from '@/models/GraphicObjectInterface';
 import { ScaleType } from '@/models/types';
 import Handlers from '@/views/Shape/Handlers';
 import { ShapeViewProps } from '@/views/Shape/types';
