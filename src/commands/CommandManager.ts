@@ -11,7 +11,6 @@ export class CommandManager {
   }
 
   undo() {
-    console.log(this.undoStack);
     const command = this.undoStack.pop();
     if (command) {
       command.undo();
@@ -20,20 +19,11 @@ export class CommandManager {
   }
 
   redo() {
-    console.log(this.redoStack);
     const command = this.redoStack.pop();
     if (command) {
       command.execute();
       this.undoStack.push(command);
     }
-  }
-
-  canUndo() {
-    return this.undoStack.length > 0;
-  }
-
-  canRedo() {
-    return this.redoStack.length > 0;
   }
 }
 

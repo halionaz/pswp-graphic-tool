@@ -3,9 +3,8 @@ import {
   GraphicObjectInterface,
   GraphicObjectType,
 } from '@/models/GraphicObjectInterface';
-import { PositionType } from '@/models/types';
 
-export abstract class Command {
+export class Command {
   private prevStates: GraphicObjectInterface[] = [];
   execute() {
     this.prevStates = [...model.snapshot];
@@ -40,38 +39,6 @@ export class RemoveCommand extends Command {
   execute() {
     super.execute();
     model.remove(this.ids);
-  }
-}
-
-export class UpdateCommand extends Command {
-  private ids: string[];
-  private patch: Partial<GraphicObjectInterface>;
-
-  constructor(ids: string[], patch: Partial<GraphicObjectInterface>) {
-    super();
-    this.ids = ids;
-    this.patch = patch;
-  }
-
-  execute() {
-    super.execute();
-    model.update(this.ids, this.patch);
-  }
-}
-
-export class MoveCommand extends Command {
-  private ids: string[];
-  private diff: PositionType;
-
-  constructor(ids: string[], diff: PositionType) {
-    super();
-    this.ids = ids;
-    this.diff = diff;
-  }
-
-  execute() {
-    super.execute();
-    model.move(this.ids, this.diff);
   }
 }
 

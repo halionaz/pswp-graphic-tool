@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useRef, useState } from 'react';
 import {
   ControllerContext,
   ControllerContextInterface,
@@ -12,15 +12,18 @@ import { PositionType } from '@/models/types';
 import { commandManager } from '@/commands/CommandManager';
 import {
   AddCommand,
-  MoveCommand,
+  Command,
   RemoveAllCommand,
   RemoveCommand,
   ReorderLayersCommand,
-  UpdateCommand,
 } from '@/commands/Command';
+import { model } from '@/models/GraphicEditorModel';
+
+const DEBOUNCE_TIME = 500;
 
 const ContextProvider = ({ children }: PropsWithChildren) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const debounceTimerRef = useRef<number>(null);
 
   // 커맨드
   const add = (type: GraphicObjectType) => {
@@ -38,13 +41,31 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const update = (patch: Partial<GraphicObjectInterface>) => {
-    const cmd = new UpdateCommand(selectedIds, patch);
-    commandManager.executeCommand(cmd);
+    if (debounceTimerRef.current !== null) {
+      clearTimeout(debounceTimerRef.current);
+    } else {
+      const cmd = new Command();
+      commandManager.executeCommand(cmd);
+    }
+
+    model.update(selectedIds, patch);
+    debounceTimerRef.current = setTimeout(() => {
+      debounceTimerRef.current = null;
+    }, DEBOUNCE_TIME);
   };
 
   const move = (diff: PositionType) => {
-    const cmd = new MoveCommand(selectedIds, diff);
-    commandManager.executeCommand(cmd);
+    if (debounceTimerRef.current !== null) {
+      clearTimeout(debounceTimerRef.current);
+    } else {
+      const cmd = new Command();
+      commandManager.executeCommand(cmd);
+    }
+
+    model.move(selectedIds, diff);
+    debounceTimerRef.current = setTimeout(() => {
+      debounceTimerRef.current = null;
+    }, DEBOUNCE_TIME);
   };
 
   const select = (id: string) => setSelectedIds([id]);
