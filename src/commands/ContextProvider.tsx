@@ -85,7 +85,6 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const undo = () => commandManager.undo();
-  const redo = () => commandManager.redo();
 
   const controller: ControllerContextInterface = {
     add,
@@ -98,7 +97,6 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     clear,
     reorderLayers,
     undo,
-    redo,
   };
 
   return (

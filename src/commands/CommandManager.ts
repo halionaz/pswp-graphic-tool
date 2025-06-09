@@ -1,28 +1,17 @@
 import { Command } from './Command';
 
 export class CommandManager {
-  private undoStack: Command[] = [];
-  private redoStack: Command[] = [];
+  private stack: Command[] = [];
 
   executeCommand(command: Command) {
-    this.undoStack.push(command);
-    this.redoStack = [];
+    this.stack.push(command);
     return command.execute();
   }
 
   undo() {
-    const command = this.undoStack.pop();
+    const command = this.stack.pop();
     if (command) {
       command.undo();
-      this.redoStack.push(command);
-    }
-  }
-
-  redo() {
-    const command = this.redoStack.pop();
-    if (command) {
-      command.execute();
-      this.undoStack.push(command);
     }
   }
 }

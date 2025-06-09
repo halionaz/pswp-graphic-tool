@@ -16,7 +16,6 @@ export interface ControllerContextInterface {
   reorderLayers: (id: string, idx: number) => void;
   withSelect: (id: string) => void;
   undo: () => void;
-  redo: () => void;
 }
 
 export const SelectedObjectsContext = createContext<string[]>([]);
@@ -31,5 +30,4 @@ export const ControllerContext = createContext<ControllerContextInterface>({
   reorderLayers: () => {},
   withSelect: () => {},
   undo: () => {},
-  redo: () => {},
 });
