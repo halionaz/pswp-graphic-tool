@@ -4,13 +4,11 @@ import s from './Canvas.module.css';
 
 import Shape from '@/views/Shape';
 import useSubscribe from '@/hooks/useSubscribe';
-import { CommandContext } from '@/commands/GraphicEditorContext';
+import { ControllerContext } from '@/commands/GraphicEditorContext';
 
 const Canvas = () => {
   const objects = useSubscribe();
-  const command = useContext(CommandContext);
-
-  const { clearSelect } = command;
+  const { clearSelect } = useContext(ControllerContext);
 
   return (
     <div className={s.Canvas} onMouseDown={clearSelect}>

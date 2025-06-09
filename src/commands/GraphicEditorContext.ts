@@ -5,7 +5,7 @@ import {
 import { PositionType } from '@/models/types';
 import { createContext } from 'react';
 
-interface CommandContextInterface {
+export interface ControllerContextInterface {
   add: (type: GraphicObjectType) => void;
   remove: () => void;
   update: (updates: Partial<GraphicObjectInterface>) => void;
@@ -15,10 +15,12 @@ interface CommandContextInterface {
   clear: () => void;
   reorderLayers: (id: string, idx: number) => void;
   withSelect: (id: string) => void;
+  undo: () => void;
+  redo: () => void;
 }
 
 export const SelectedObjectsContext = createContext<string[]>([]);
-export const CommandContext = createContext<CommandContextInterface>({
+export const ControllerContext = createContext<ControllerContextInterface>({
   add: () => {},
   remove: () => {},
   update: () => {},
@@ -28,4 +30,6 @@ export const CommandContext = createContext<CommandContextInterface>({
   clear: () => {},
   reorderLayers: () => {},
   withSelect: () => {},
+  undo: () => {},
+  redo: () => {},
 });

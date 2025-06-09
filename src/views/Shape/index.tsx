@@ -1,7 +1,7 @@
 import useDrag from '@/hooks/useDrag';
 import { GraphicObjectInterface } from '@/models/GraphicObjectInterface';
 import {
-  CommandContext,
+  ControllerContext,
   SelectedObjectsContext,
 } from '@/commands/GraphicEditorContext';
 import Ellipse from '@/views/Shape/Ellipse';
@@ -15,11 +15,10 @@ interface Props {
   object: GraphicObjectInterface;
 }
 const Shape = ({ object }: Props) => {
-  const command = useContext(CommandContext);
   const selectedIndex = useContext(SelectedObjectsContext);
   const isSelected = selectedIndex.indexOf(object.id) !== -1;
 
-  const { move, select, withSelect } = command;
+  const { move, select, withSelect } = useContext(ControllerContext);
 
   const { dragRef, handleMouseDown, isDragging } = useDrag(move);
 

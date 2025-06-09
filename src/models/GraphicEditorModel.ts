@@ -54,6 +54,11 @@ export default class GraphicEditorModel extends Observable {
     this.objects.splice(targetIdx, 0, obj);
     this.notify();
   }
+
+  restore(objects: GraphicObjectInterface[]) {
+    this.objects = objects;
+    this.notify();
+  }
 }
 
 export const model = new GraphicEditorModel();

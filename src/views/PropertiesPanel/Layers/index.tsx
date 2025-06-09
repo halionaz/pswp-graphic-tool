@@ -4,19 +4,17 @@ import s from './Layers.module.css';
 
 import useSubscribe from '@/hooks/useSubscribe';
 import {
-  CommandContext,
+  ControllerContext,
   SelectedObjectsContext,
 } from '@/commands/GraphicEditorContext';
 
 const Layers = () => {
   const objects = useSubscribe();
   const selectedObjects = useContext(SelectedObjectsContext);
-  const command = useContext(CommandContext);
+  const { reorderLayers, select } = useContext(ControllerContext);
 
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
-
-  const { reorderLayers, select } = command;
 
   const handleDragStart = (id: string) => {
     setDraggedItem(id);
