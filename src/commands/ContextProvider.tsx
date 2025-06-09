@@ -1,4 +1,4 @@
-import { PropsWithChildren, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import {
   ControllerContext,
   ControllerContextInterface,
@@ -28,7 +28,16 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     cmd: CommandWithDebounce;
   } | null>(null);
 
-  // 커맨드
+  // Clean Up Debounce Timer
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current.timer);
+      }
+    };
+  }, []);
+
+  // Controller Functions
   const add = (type: GraphicObjectType) => {
     const cmd = new AddCommand(type);
     const addedObject = commandManager.executeCommand(
