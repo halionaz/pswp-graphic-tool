@@ -14,6 +14,22 @@ export class Command {
   }
 }
 
+export class CommandWithDebounce extends Command {
+  private doneStates: GraphicObjectInterface[] | null = null;
+
+  execute(): void {
+    super.execute();
+    if (this.doneStates !== null) {
+      model.restore(this.doneStates);
+      return;
+    }
+  }
+
+  setDoneStates() {
+    this.doneStates = [...model.snapshot];
+  }
+}
+
 export class AddCommand extends Command {
   private type: GraphicObjectType;
 

@@ -12,7 +12,7 @@ import { PositionType } from '@/models/types';
 import { commandManager } from '@/commands/CommandManager';
 import {
   AddCommand,
-  Command,
+  CommandWithDebounce,
   RemoveAllCommand,
   RemoveCommand,
   ReorderLayersCommand,
@@ -23,7 +23,10 @@ const DEBOUNCE_TIME = 500;
 
 const ContextProvider = ({ children }: PropsWithChildren) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const debounceTimerRef = useRef<number>(null);
+  const debounceRef = useRef<{
+    timer: number;
+    cmd: CommandWithDebounce;
+  } | null>(null);
 
   // 커맨드
   const add = (type: GraphicObjectType) => {
@@ -41,31 +44,45 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const update = (patch: Partial<GraphicObjectInterface>) => {
-    if (debounceTimerRef.current !== null) {
-      clearTimeout(debounceTimerRef.current);
+    let cmd: CommandWithDebounce;
+    if (debounceRef.current !== null) {
+      cmd = debounceRef.current.cmd;
+      clearTimeout(debounceRef.current.timer);
     } else {
-      const cmd = new Command();
+      cmd = new CommandWithDebounce();
       commandManager.executeCommand(cmd);
     }
 
     model.update(selectedIds, patch);
-    debounceTimerRef.current = setTimeout(() => {
-      debounceTimerRef.current = null;
-    }, DEBOUNCE_TIME);
+
+    debounceRef.current = {
+      timer: setTimeout(() => {
+        debounceRef.current = null;
+        cmd.setDoneStates();
+      }, DEBOUNCE_TIME),
+      cmd,
+    };
   };
 
   const move = (diff: PositionType) => {
-    if (debounceTimerRef.current !== null) {
-      clearTimeout(debounceTimerRef.current);
+    let cmd: CommandWithDebounce;
+    if (debounceRef.current !== null) {
+      cmd = debounceRef.current.cmd;
+      clearTimeout(debounceRef.current.timer);
     } else {
-      const cmd = new Command();
+      cmd = new CommandWithDebounce();
       commandManager.executeCommand(cmd);
     }
 
     model.move(selectedIds, diff);
-    debounceTimerRef.current = setTimeout(() => {
-      debounceTimerRef.current = null;
-    }, DEBOUNCE_TIME);
+
+    debounceRef.current = {
+      timer: setTimeout(() => {
+        debounceRef.current = null;
+        cmd.setDoneStates();
+      }, DEBOUNCE_TIME),
+      cmd,
+    };
   };
 
   const select = (id: string) => setSelectedIds([id]);
@@ -85,6 +102,7 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const undo = () => commandManager.undo();
+  const redo = () => commandManager.redo();
 
   const controller: ControllerContextInterface = {
     add,
@@ -97,6 +115,7 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     clear,
     reorderLayers,
     undo,
+    redo,
   };
 
   return (

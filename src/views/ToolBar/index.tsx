@@ -16,6 +16,7 @@ const ToolBar = () => {
       <button onClick={() => controller.remove()}>Delete</button>
       <button onClick={() => controller.clear()}>Clear Canvas</button>
       <button onClick={() => controller.undo()}>Undo</button>
+      <button onClick={() => controller.redo()}>Redo</button>
     </div>
   );
 };
