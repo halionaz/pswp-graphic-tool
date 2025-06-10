@@ -6,6 +6,19 @@ import {
 import { PositionType } from './types';
 import objectFactory from '@/models/ObjectFactory';
 
+const walk = (
+  node: GraphicObjectInterface,
+  fn: (o: GraphicObjectInterface) => GraphicObjectInterface)
+  : GraphicObjectInterface => {
+  if (node.type === 'group') {
+    return {
+      ...fn(node),
+      children: node.children.map(c => walk(c, fn)),
+    };
+  }
+  return fn(node);
+};
+
 export default class GraphicEditorModel extends Observable {
   private objects: GraphicObjectInterface[] = [];
 
@@ -36,14 +49,63 @@ export default class GraphicEditorModel extends Observable {
 
   move(ids: string[], diff: PositionType) {
     if (!ids.length) return;
-    this.objects = this.objects.map(o =>
-      ids.includes(o.id)
-        ? {
-            ...o,
-            position: { x: o.position.x + diff.x, y: o.position.y + diff.y },
-          }
-        : o
-    );
+    const mover = (o: GraphicObjectInterface): GraphicObjectInterface => {
+      if (ids.includes(o.id)) {
+        return {
+          ...o,
+          position: { x: o.position.x + diff.x, y: o.position.y + diff.y },
+        };
+      }
+      return o;
+    };
+    this.objects = this.objects.map(o => walk(o, mover));
+    this.notify();
+  }
+
+  group(ids: string[]) {
+    if (ids.length < 2) return;
+
+    // pull only root-level objects; if a child is selected the caller
+    // should already have bubbled the group id up.
+    const picked: GraphicObjectInterface[] = [];
+    this.objects = this.objects.filter(o => {
+      if (ids.includes(o.id)) {
+        picked.push(o);
+        return false;            // remove from root list
+      }
+      return true;
+    });
+
+    if (!picked.length) return;
+
+    const group: GroupInterface = {
+      id: crypto.randomUUID(),
+      title: 'group',
+      type: 'group',
+      color: 'transparent',
+      position: { x: 0, y: 0 },     // not rendered
+      rotation: 0,
+      children: picked,
+    };
+
+    this.objects.unshift(group);
+    this.notify();
+  }
+
+  ungroup(ids: string[]) {
+    if (!ids.length) return;
+    const newRoots: GraphicObjectInterface[] = [];
+
+    this.objects = this.objects.flatMap(o => {
+      if (ids.includes(o.id) && o.type === 'group') {
+        newRoots.push(...o.children);
+        return [];               // delete the group
+      }
+      return [o];
+    });
+
+    // keep original Z-order by pushing at the top
+    this.objects.unshift(...newRoots);
     this.notify();
   }
 

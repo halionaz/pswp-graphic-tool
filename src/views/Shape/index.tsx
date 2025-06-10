@@ -1,5 +1,5 @@
 import useDrag from '@/hooks/useDrag';
-import { GraphicObjectInterface } from '@/models/GraphicObjectInterface';
+import { GraphicObjectInterface, GroupInterface } from '@/models/GraphicObjectInterface';
 import {
   ControllerContext,
   SelectedObjectsContext,
@@ -10,6 +10,7 @@ import Line from '@/views/Shape/Line';
 import Rectangle from '@/views/Shape/Rectangle';
 import Text from '@/views/Shape/Text';
 import { useContext } from 'react';
+import { model } from '@/models/GraphicEditorModel'; 
 
 interface Props {
   object: GraphicObjectInterface;
@@ -24,12 +25,24 @@ const Shape = ({ object }: Props) => {
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
+    
+    const findSelectableId = (o: GraphicObjectInterface): string => {
+      if (o.type !== 'group') return o.id;
+      return o.id;
+    };
+
+    let targetId = object.id;
+    const rootGroup = model.snapshot.find(
+      o => o.type === 'group' && (o as GroupInterface).children.some(c => c.id === object.id)
+    );
+    if (rootGroup) targetId = rootGroup.id;
+
     if (e.shiftKey) {
       // shift가 함께 눌린 상태라면 withSelect
-      withSelect(object.id);
+      withSelect(targetId);
     } else {
       // 그렇지 않다면 select
-      select(object.id);
+      select(targetId);
     }
     handleMouseDown(e);
   };
@@ -64,6 +77,14 @@ const Shape = ({ object }: Props) => {
       return <Image {...shapeProps} object={object} />;
     case 'text':
       return <Text {...shapeProps} object={object} />;
+    case 'group':
+      return (
+        <>
+	  {(object as GroupInterface).children.map(child => (
+	    <Shape key={child.id} object={child} />
+	  ))}
+	</>
+      );
   }
 };
 export default Shape;

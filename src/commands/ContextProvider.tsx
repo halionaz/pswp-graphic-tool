@@ -105,6 +105,12 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     commandManager.executeCommand(cmd);
   };
 
+  const group = () => {
+    const gid = model.group(selectedIds);
+    setSelectedIds([gid]);
+  };
+  const ungroup = () => model.ungroup(selectedIds);
+
   const reorderLayers = (id: string, idx: number) => {
     const cmd = new ReorderLayersCommand(id, idx);
     commandManager.executeCommand(cmd);
@@ -122,6 +128,8 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
     withSelect,
     clearSelect,
     clear,
+    group,
+    ungroup,
     reorderLayers,
     undo,
     redo,
