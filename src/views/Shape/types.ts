@@ -1,4 +1,4 @@
-import { GraphicObjectInterface } from '@/models/GraphicObjectModel';
+import { GraphicObjectInterface } from '@/models/GraphicObjectInterface';
 
 export interface ShapeViewProps {
   style: React.CSSProperties;

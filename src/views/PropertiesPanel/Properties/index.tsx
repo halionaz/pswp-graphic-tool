@@ -5,12 +5,12 @@ import s from './Properties.module.css';
 import {
   ControllerContext,
   SelectedObjectsContext,
-} from '@/models/GraphicEditorContext';
-import useSubscribe from '@/libs/hooks/useSubscribe';
+} from '@/commands/GraphicEditorContext';
+import useSubscribe from '@/hooks/useSubscribe';
 
 const Properties = () => {
   const objects = useSubscribe();
-  const controller = useContext(ControllerContext);
+  const { update } = useContext(ControllerContext);
   const selectedObjects = useContext(SelectedObjectsContext);
 
   const data = objects.filter(val => selectedObjects.indexOf(val.id) !== -1);
@@ -26,8 +26,6 @@ const Properties = () => {
   const isText = viewData.type === 'text';
   const isLine = viewData.type === 'line';
   const isImage = viewData.type === 'image';
-
-  const { update } = controller;
 
   return (
     <div className={s.Container}>

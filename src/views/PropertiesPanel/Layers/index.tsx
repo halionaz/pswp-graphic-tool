@@ -2,21 +2,19 @@ import { useContext, useState } from 'react';
 
 import s from './Layers.module.css';
 
-import useSubscribe from '@/libs/hooks/useSubscribe';
+import useSubscribe from '@/hooks/useSubscribe';
 import {
   ControllerContext,
   SelectedObjectsContext,
-} from '@/models/GraphicEditorContext';
+} from '@/commands/GraphicEditorContext';
 
 const Layers = () => {
   const objects = useSubscribe();
   const selectedObjects = useContext(SelectedObjectsContext);
-  const controller = useContext(ControllerContext);
+  const { reorderLayers, select } = useContext(ControllerContext);
 
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
-
-  const { reorderLayers, select } = controller;
 
   const handleDragStart = (id: string) => {
     setDraggedItem(id);

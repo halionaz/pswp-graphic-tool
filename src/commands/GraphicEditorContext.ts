@@ -1,12 +1,11 @@
-import GraphicEditorModel from '@/models/GraphicEditorModel';
 import {
   GraphicObjectInterface,
   GraphicObjectType,
-} from '@/models/GraphicObjectModel';
+} from '@/models/GraphicObjectInterface';
 import { PositionType } from '@/models/types';
 import { createContext } from 'react';
 
-interface ControllerContextInterface {
+export interface ControllerContextInterface {
   add: (type: GraphicObjectType) => void;
   remove: () => void;
   update: (updates: Partial<GraphicObjectInterface>) => void;
@@ -16,9 +15,10 @@ interface ControllerContextInterface {
   clear: () => void;
   reorderLayers: (id: string, idx: number) => void;
   withSelect: (id: string) => void;
+  undo: () => void;
+  redo: () => void;
 }
 
-export const ModelContext = createContext<GraphicEditorModel | null>(null);
 export const SelectedObjectsContext = createContext<string[]>([]);
 export const ControllerContext = createContext<ControllerContextInterface>({
   add: () => {},
@@ -30,4 +30,6 @@ export const ControllerContext = createContext<ControllerContextInterface>({
   clear: () => {},
   reorderLayers: () => {},
   withSelect: () => {},
+  undo: () => {},
+  redo: () => {},
 });

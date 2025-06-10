@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 
 import s from './Ellipse.module.css';
 
-import { EllipseInterface } from '@/models/GraphicObjectModel';
+import { EllipseInterface } from '@/models/GraphicObjectInterface';
 import { ShapeViewProps } from '@/views/Shape/types';
 import Handlers from '@/views/Shape/Handlers';
 

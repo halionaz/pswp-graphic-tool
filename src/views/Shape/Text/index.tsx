@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import s from './Text.module.css';
 
 import { ShapeViewProps } from '@/views/Shape/types';
-import { TextInterface } from '@/models/GraphicObjectModel';
+import { TextInterface } from '@/models/GraphicObjectInterface';
 
 interface TextViewProps extends ShapeViewProps {
   object: TextInterface;

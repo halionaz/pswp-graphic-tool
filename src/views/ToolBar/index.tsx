@@ -1,4 +1,4 @@
-import { ControllerContext } from '@/models/GraphicEditorContext';
+import { ControllerContext } from '@/commands/GraphicEditorContext';
 import { useContext } from 'react';
 
 import s from './ToolBar.module.css';
@@ -15,6 +15,8 @@ const ToolBar = () => {
       <button onClick={() => controller.add('text')}>Text</button>
       <button onClick={() => controller.remove()}>Delete</button>
       <button onClick={() => controller.clear()}>Clear Canvas</button>
+      <button onClick={() => controller.undo()}>Undo</button>
+      <button onClick={() => controller.redo()}>Redo</button>
     </div>
   );
 };
