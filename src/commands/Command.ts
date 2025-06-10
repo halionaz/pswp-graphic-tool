@@ -80,3 +80,33 @@ export class ReorderLayersCommand extends Command {
     model.reorder(this.id, this.idx);
   }
 }
+
+export class GroupCommand extends Command {
+  private ids: string[];
+
+  constructor(ids: string[]) {
+    super();
+    this.ids = ids;
+  }
+
+  execute() {
+    super.execute();
+    return model.group(this.ids);
+  }
+}
+
+export class UngroupCommand extends Command {
+  private ids: string[];
+
+  constructor(ids: string[]) {
+    super();
+    this.ids = ids;
+  }
+
+  execute() {
+    super.execute();
+    return model.ungroup(this.ids);
+  }
+}
+
+

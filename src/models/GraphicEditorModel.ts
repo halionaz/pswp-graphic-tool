@@ -6,18 +6,7 @@ import {
 import { PositionType } from './types';
 import objectFactory from '@/models/ObjectFactory';
 
-const walk = (
-  node: GraphicObjectInterface,
-  fn: (o: GraphicObjectInterface) => GraphicObjectInterface)
-  : GraphicObjectInterface => {
-  if (node.type === 'group') {
-    return {
-      ...fn(node),
-      children: node.children.map(c => walk(c, fn)),
-    };
-  }
-  return fn(node);
-};
+
 
 export default class GraphicEditorModel extends Observable {
   private objects: GraphicObjectInterface[] = [];
@@ -49,34 +38,74 @@ export default class GraphicEditorModel extends Observable {
 
   move(ids: string[], diff: PositionType) {
     if (!ids.length) return;
-    const mover = (o: GraphicObjectInterface): GraphicObjectInterface => {
-      if (ids.includes(o.id)) {
+    
+    const walk = (
+      node: GraphicObjectInterface,
+      fn: (o: GraphicObjectInterface) => GraphicObjectInterface
+    ): GraphicObjectInterface => {
+      if (node.type === 'group') {
         return {
-          ...o,
-          position: { x: o.position.x + diff.x, y: o.position.y + diff.y },
+          ...fn(node),
+          children: node.children.map(c => walk(c, fn)),
         };
       }
-      return o;
+      return fn(node);
     };
-    this.objects = this.objects.map(o => walk(o, mover));
+    
+    const walkAndMove = (
+      node: GraphicObjectInterface,
+      isParentSelected: boolean
+    ): GraphicObjectInterface => {
+      const isSelected = isParentSelected || ids.includes(node.id);
+      
+      let movedNode = node;
+      if (isSelected) {
+        movedNode = {
+          ...node,
+          position: {
+            x: node.position.x + diff.x,
+            y: node.position.y + diff.y,
+          },
+        };
+      }
+
+      if (movedNode.type === 'group') {
+        return {
+          ...movedNode,
+          children: movedNode.children.map(c => walkAndMove(c, isSelected)),
+        };
+      }
+      return movedNode;
+    };
+
+    this.objects = this.objects.map(o => walkAndMove(o, false));
     this.notify();
   }
 
   group(ids: string[]) {
     if (ids.length < 2) return;
 
-    // pull only root-level objects; if a child is selected the caller
-    // should already have bubbled the group id up.
-    const picked: GraphicObjectInterface[] = [];
-    this.objects = this.objects.filter(o => {
+    const itemsToGroup: GraphicObjectInterface[] = [];
+    const remainingObjects: GraphicObjectInterface[] = [];
+
+    this.objects.forEach(o => {
       if (ids.includes(o.id)) {
-        picked.push(o);
-        return false;            // remove from root list
+        // If the object is a group, flatten it by taking its children.
+        // Otherwise, take the object itself.
+        if (o.type === 'group') {
+          itemsToGroup.push(...o.children);
+        } else {
+          itemsToGroup.push(o);
+        }
+      } else {
+        remainingObjects.push(o);
       }
-      return true;
     });
 
-    if (!picked.length) return;
+    if (itemsToGroup.length < 2) {
+        this.objects = [...remainingObjects, ...itemsToGroup];
+        return;
+    }
 
     const group: GroupInterface = {
       id: crypto.randomUUID(),
@@ -85,11 +114,12 @@ export default class GraphicEditorModel extends Observable {
       color: 'transparent',
       position: { x: 0, y: 0 },     // not rendered
       rotation: 0,
-      children: picked,
+      children: itemsToGroup,
     };
 
-    this.objects.unshift(group);
+    this.objects = [group, ...remainingObjects];
     this.notify();
+    return group;
   }
 
   ungroup(ids: string[]) {
@@ -99,14 +129,13 @@ export default class GraphicEditorModel extends Observable {
     this.objects = this.objects.flatMap(o => {
       if (ids.includes(o.id) && o.type === 'group') {
         newRoots.push(...o.children);
-        return [];               // delete the group
+        return o.children;               // delete the group
       }
       return [o];
     });
 
-    // keep original Z-order by pushing at the top
-    this.objects.unshift(...newRoots);
     this.notify();
+    return newRoots;
   }
 
   reorder(id: string, targetIdx: number) {
@@ -120,6 +149,30 @@ export default class GraphicEditorModel extends Observable {
   restore(objects: GraphicObjectInterface[]) {
     this.objects = objects;
     this.notify();
+  }
+
+  public findSelectable(id: string): GraphicObjectInterface | undefined {
+    // Helper to recursively search for an ID within an object and its children
+    const search = (
+      searchId: string,
+      node: GraphicObjectInterface
+    ): GraphicObjectInterface | null => {
+      if (node.id === searchId) return node;
+      if (node.type === 'group') {
+        for (const child of node.children) {
+          const found = search(searchId, child);
+          if (found) return node; // Return the group if a child is found
+        }
+      }
+      return null;
+    };
+
+    for (const obj of this.objects) {
+      const foundRoot = search(id, obj);
+      if (foundRoot) return foundRoot;
+    }
+
+    return undefined;
   }
 }
 

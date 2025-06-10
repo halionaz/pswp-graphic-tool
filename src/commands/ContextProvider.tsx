@@ -13,9 +13,11 @@ import { commandManager } from '@/commands/CommandManager';
 import {
   AddCommand,
   CommandWithDebounce,
+  GroupCommand,
   RemoveAllCommand,
   RemoveCommand,
   ReorderLayersCommand,
+  UngroupCommand,
 } from '@/commands/Command';
 import { model } from '@/models/GraphicEditorModel';
 
@@ -106,10 +108,20 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const group = () => {
-    const gid = model.group(selectedIds);
-    setSelectedIds([gid]);
+    const cmd = new GroupCommand(selectedIds);
+    const newGroup = commandManager.executeCommand(cmd) as GroupInterface;
+    if (newGroup) {
+      setSelectedIds([newGroup.id]);
+    }
   };
-  const ungroup = () => model.ungroup(selectedIds);
+  const ungroup = () => {
+    const cmd = new UngroupCommand(selectedIds);
+    const ungroupedChildren = commandManager.executeCommand(cmd) as
+      GraphicObjectInterface[];
+    if (ungroupedChildren) {
+      setSelectedIds(ungroupedChildren.map(c => c.id));
+    }
+  };
 
   const reorderLayers = (id: string, idx: number) => {
     const cmd = new ReorderLayersCommand(id, idx);
