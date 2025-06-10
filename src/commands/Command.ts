@@ -31,9 +31,9 @@ export class CommandWithDebounce extends Command {
 }
 
 export class AddCommand extends Command {
-  private type: GraphicObjectType;
+  private type: Exclude<GraphicObjectType, 'group'>;
 
-  constructor(type: GraphicObjectType) {
+  constructor(type: Exclude<GraphicObjectType, 'group'>) {
     super();
     this.type = type;
   }
@@ -108,5 +108,3 @@ export class UngroupCommand extends Command {
     return model.ungroup(this.ids);
   }
 }
-
-

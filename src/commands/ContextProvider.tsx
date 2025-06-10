@@ -7,6 +7,7 @@ import {
 import {
   GraphicObjectInterface,
   GraphicObjectType,
+  GroupInterface,
 } from '@/models/GraphicObjectInterface';
 import { PositionType } from '@/models/types';
 import { commandManager } from '@/commands/CommandManager';
@@ -40,7 +41,7 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   // Controller Functions
-  const add = (type: GraphicObjectType) => {
+  const add = (type: Exclude<GraphicObjectType, 'group'>) => {
     const cmd = new AddCommand(type);
     const addedObject = commandManager.executeCommand(
       cmd
@@ -109,15 +110,19 @@ const ContextProvider = ({ children }: PropsWithChildren) => {
 
   const group = () => {
     const cmd = new GroupCommand(selectedIds);
-    const newGroup = commandManager.executeCommand(cmd) as GroupInterface;
+    const newGroup = commandManager.executeCommand(
+      cmd
+    ) as unknown as GroupInterface;
     if (newGroup) {
       setSelectedIds([newGroup.id]);
     }
   };
+
   const ungroup = () => {
     const cmd = new UngroupCommand(selectedIds);
-    const ungroupedChildren = commandManager.executeCommand(cmd) as
-      GraphicObjectInterface[];
+    const ungroupedChildren = commandManager.executeCommand(
+      cmd
+    ) as unknown as GraphicObjectInterface[];
     if (ungroupedChildren) {
       setSelectedIds(ungroupedChildren.map(c => c.id));
     }

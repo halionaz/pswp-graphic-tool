@@ -8,7 +8,7 @@ import {
   TextInterface,
 } from '@/models/GraphicObjectInterface';
 
-const objectFactory = (type: GraphicObjectType) => {
+const objectFactory = (type: Exclude<GraphicObjectType, 'group'>) => {
   const newObjectBase: GraphicObjectInterfaceBase = {
     id: crypto.randomUUID(),
     title: `new ${type}`,
