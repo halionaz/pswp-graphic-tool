@@ -1,20 +1,19 @@
 .
 ├── App.tsx
-├── dir.txt
+├── commands
+│   ├── Command.ts
+│   ├── CommandManager.ts
+│   ├── ContextProvider.tsx
+│   └── GraphicEditorContext.ts
+├── hooks
+│   ├── useDrag.ts
+│   ├── useSubscribe.ts
+│   └── useUpdateView.ts
 ├── index.css
-├── libs
-│   ├── hooks
-│   │   ├── useDrag.ts
-│   │   ├── useSubscribe.ts
-│   │   └── useUpdateView.ts
-│   └── utils
-│       └── getTranslateValues.ts
 ├── main.tsx
 ├── models
-│   ├── ContextProvider.tsx
-│   ├── GraphicEditorContext.ts
 │   ├── GraphicEditorModel.ts
-│   ├── GraphicObjectModel.ts
+│   ├── GraphicObjectInterface.ts
 │   ├── ObjectFactory.ts
 │   ├── Observables.ts
 │   └── types.ts
@@ -22,17 +21,16 @@
 │   ├── Canvas
 │   ├── PropertiesPanel
 │   │   ├── Layers
-│   │   └── Properties
+│   │   ├── Properties
+│   │   └── index.tsx
 │   ├── Shape
 │   │   ├── Ellipse
 │   │   ├── Handlers
-│   │   │   ├── index.tsx
-│   │   │   └── withHandlers.tsx
 │   │   ├── Image
 │   │   ├── Line
 │   │   ├── Rectangle
-│   │   └── Text
+│   │   ├── Text
+│   │   ├── index.tsx
+│   │   └── types.ts
 │   └── ToolBar
-└── vite-env.d.ts
-
-18 directories, 20 files
+└── utils
