@@ -6,6 +6,7 @@ import {
 } from './GraphicObjectInterface';
 import { PositionType } from './types';
 import objectFactory from '@/models/ObjectFactory';
+import walk from '@/utils/walk';
 
 export default class GraphicEditorModel extends Observable {
   private objects: GraphicObjectInterface[] = [];
@@ -39,7 +40,7 @@ export default class GraphicEditorModel extends Observable {
     if (!ids.length) return;
 
     const idSet = new Set(ids);
-    this.objects = this.objects.map(o => this.walk(o, idSet, diff));
+    this.objects = this.objects.map(o => walk(o, idSet, diff));
     this.notify();
   }
 
@@ -124,28 +125,6 @@ export default class GraphicEditorModel extends Observable {
 
     return undefined;
   }
-
-  private walk(
-    node: GraphicObjectInterface,
-    ids: Set<string>,
-    diff: PositionType,
-    isParentSelected = false
-  ): GraphicObjectInterface {
-    const isSelected = isParentSelected || ids.has(node.id);
-    if (node.type !== 'group') {
-      return isSelected
-        ? {
-	    ...node,
-	    position: { x: node.position.x + diff.x, y: node.position.y + diff.y },
-	  }
-	: node;
-    }
-
-    return {
-      ...node,
-      children: node.children.map(c => this.walk(c, ids, diff, isSelected)),
-    };
-  };
 }
 
 export const model = new GraphicEditorModel();
