@@ -31,9 +31,9 @@ export class CommandWithDebounce extends Command {
 }
 
 export class AddCommand extends Command {
-  private type: GraphicObjectType;
+  private type: Exclude<GraphicObjectType, 'group'>;
 
-  constructor(type: GraphicObjectType) {
+  constructor(type: Exclude<GraphicObjectType, 'group'>) {
     super();
     this.type = type;
   }
@@ -78,5 +78,33 @@ export class ReorderLayersCommand extends Command {
   execute(): void {
     super.execute();
     model.reorder(this.id, this.idx);
+  }
+}
+
+export class GroupCommand extends Command {
+  private ids: string[];
+
+  constructor(ids: string[]) {
+    super();
+    this.ids = ids;
+  }
+
+  execute() {
+    super.execute();
+    return model.group(this.ids);
+  }
+}
+
+export class UngroupCommand extends Command {
+  private ids: string[];
+
+  constructor(ids: string[]) {
+    super();
+    this.ids = ids;
+  }
+
+  execute() {
+    super.execute();
+    return model.ungroup(this.ids);
   }
 }

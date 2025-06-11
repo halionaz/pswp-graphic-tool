@@ -5,7 +5,8 @@ export type GraphicObjectType =
   | 'ellipse'
   | 'line'
   | 'image'
-  | 'text';
+  | 'text'
+  | 'group';
 
 // 타입과 무관하게 모든 오브젝트가 가지는 공통 요소
 export interface GraphicObjectInterfaceBase {
@@ -46,9 +47,15 @@ export interface TextInterface extends GraphicObjectInterfaceBase {
   textSize: number;
 }
 
+export interface GroupInterface extends GraphicObjectInterfaceBase {
+  type: 'group';
+  children: GraphicObjectInterface[];
+}
+
 export type GraphicObjectInterface =
   | RectangleInterface
   | EllipseInterface
   | LineInterface
   | ImageInterface
-  | TextInterface;
+  | TextInterface
+  | GroupInterface;
