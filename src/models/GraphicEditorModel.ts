@@ -38,33 +38,8 @@ export default class GraphicEditorModel extends Observable {
   move(ids: string[], diff: PositionType) {
     if (!ids.length) return;
 
-    const walk = (
-      node: GraphicObjectInterface,
-      isParentSelected: boolean
-    ): GraphicObjectInterface => {
-      const isSelected = isParentSelected || ids.includes(node.id);
-
-      let movedNode = node;
-      if (isSelected) {
-        movedNode = {
-          ...node,
-          position: {
-            x: node.position.x + diff.x,
-            y: node.position.y + diff.y,
-          },
-        };
-      }
-
-      if (movedNode.type === 'group') {
-        return {
-          ...movedNode,
-          children: movedNode.children.map(c => walk(c, isSelected)),
-        };
-      }
-      return movedNode;
-    };
-
-    this.objects = this.objects.map(o => walk(o, false));
+    const idSet = new Set(ids);
+    this.objects = this.objects.map(o => this.walk(o, idSet, diff));
     this.notify();
   }
 
@@ -149,6 +124,28 @@ export default class GraphicEditorModel extends Observable {
 
     return undefined;
   }
+
+  private walk(
+    node: GraphicObjectInterface,
+    ids: Set<string>,
+    diff: PositionType,
+    isParentSelected = false
+  ): GraphicObjectInterface {
+    const isSelected = isParentSelected || ids.has(node.id);
+    if (node.type !== 'group') {
+      return isSelected
+        ? {
+	    ...node,
+	    position: { x: node.position.x + diff.x, y: node.position.y + diff.y },
+	  }
+	: node;
+    }
+
+    return {
+      ...node,
+      children: node.children.map(c => this.walk(c, ids, diff, isSelected)),
+    };
+  };
 }
 
 export const model = new GraphicEditorModel();
