@@ -7,6 +7,7 @@ import {
 import { PositionType } from './types';
 import objectFactory from '@/models/ObjectFactory';
 import walk from '@/utils/walk';
+import search from '@/utils/search';
 
 export default class GraphicEditorModel extends Observable {
   private objects: GraphicObjectInterface[] = [];
@@ -104,20 +105,6 @@ export default class GraphicEditorModel extends Observable {
 
   public findSelectable(id: string): GraphicObjectInterface | undefined {
     // Helper to recursively search for an ID within an object and its children
-    const search = (
-      searchId: string,
-      node: GraphicObjectInterface
-    ): GraphicObjectInterface | null => {
-      if (node.id === searchId) return node;
-      if (node.type === 'group') {
-        for (const child of node.children) {
-          const found = search(searchId, child);
-          if (found) return node; // Return the group if a child is found
-        }
-      }
-      return null;
-    };
-
     for (const obj of this.objects) {
       const foundRoot = search(id, obj);
       if (foundRoot) return foundRoot;
