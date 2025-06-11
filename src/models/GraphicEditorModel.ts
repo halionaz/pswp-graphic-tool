@@ -2,11 +2,10 @@ import { Observable } from './Observables';
 import {
   GraphicObjectType,
   GraphicObjectInterface,
+  GroupInterface,
 } from './GraphicObjectInterface';
 import { PositionType } from './types';
 import objectFactory from '@/models/ObjectFactory';
-
-
 
 export default class GraphicEditorModel extends Observable {
   private objects: GraphicObjectInterface[] = [];
@@ -15,7 +14,7 @@ export default class GraphicEditorModel extends Observable {
     return this.objects;
   }
 
-  add(type: GraphicObjectType): GraphicObjectInterface {
+  add(type: Exclude<GraphicObjectType, 'group'>): GraphicObjectInterface {
     const obj = objectFactory(type);
     this.objects.unshift(obj);
     this.notify();
@@ -38,26 +37,13 @@ export default class GraphicEditorModel extends Observable {
 
   move(ids: string[], diff: PositionType) {
     if (!ids.length) return;
-    
+
     const walk = (
-      node: GraphicObjectInterface,
-      fn: (o: GraphicObjectInterface) => GraphicObjectInterface
-    ): GraphicObjectInterface => {
-      if (node.type === 'group') {
-        return {
-          ...fn(node),
-          children: node.children.map(c => walk(c, fn)),
-        };
-      }
-      return fn(node);
-    };
-    
-    const walkAndMove = (
       node: GraphicObjectInterface,
       isParentSelected: boolean
     ): GraphicObjectInterface => {
       const isSelected = isParentSelected || ids.includes(node.id);
-      
+
       let movedNode = node;
       if (isSelected) {
         movedNode = {
@@ -72,13 +58,13 @@ export default class GraphicEditorModel extends Observable {
       if (movedNode.type === 'group') {
         return {
           ...movedNode,
-          children: movedNode.children.map(c => walkAndMove(c, isSelected)),
+          children: movedNode.children.map(c => walk(c, isSelected)),
         };
       }
       return movedNode;
     };
 
-    this.objects = this.objects.map(o => walkAndMove(o, false));
+    this.objects = this.objects.map(o => walk(o, false));
     this.notify();
   }
 
@@ -90,29 +76,18 @@ export default class GraphicEditorModel extends Observable {
 
     this.objects.forEach(o => {
       if (ids.includes(o.id)) {
-        // If the object is a group, flatten it by taking its children.
-        // Otherwise, take the object itself.
-        if (o.type === 'group') {
-          itemsToGroup.push(...o.children);
-        } else {
-          itemsToGroup.push(o);
-        }
+        itemsToGroup.push(o);
       } else {
         remainingObjects.push(o);
       }
     });
-
-    if (itemsToGroup.length < 2) {
-        this.objects = [...remainingObjects, ...itemsToGroup];
-        return;
-    }
 
     const group: GroupInterface = {
       id: crypto.randomUUID(),
       title: 'group',
       type: 'group',
       color: 'transparent',
-      position: { x: 0, y: 0 },     // not rendered
+      position: { x: 0, y: 0 },
       rotation: 0,
       children: itemsToGroup,
     };
@@ -129,7 +104,7 @@ export default class GraphicEditorModel extends Observable {
     this.objects = this.objects.flatMap(o => {
       if (ids.includes(o.id) && o.type === 'group') {
         newRoots.push(...o.children);
-        return o.children;               // delete the group
+        return o.children; // delete the group
       }
       return [o];
     });

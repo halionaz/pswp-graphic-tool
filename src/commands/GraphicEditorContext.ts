@@ -6,7 +6,7 @@ import { PositionType } from '@/models/types';
 import { createContext } from 'react';
 
 export interface ControllerContextInterface {
-  add: (type: GraphicObjectType) => void;
+  add: (type: Exclude<GraphicObjectType, 'group'>) => void;
   remove: () => void;
   update: (updates: Partial<GraphicObjectInterface>) => void;
   move: (diff: PositionType) => void;
@@ -17,6 +17,8 @@ export interface ControllerContextInterface {
   withSelect: (id: string) => void;
   undo: () => void;
   redo: () => void;
+  group: () => void;
+  ungroup: () => void;
 }
 
 export const SelectedObjectsContext = createContext<string[]>([]);
@@ -32,4 +34,6 @@ export const ControllerContext = createContext<ControllerContextInterface>({
   withSelect: () => {},
   undo: () => {},
   redo: () => {},
+  group: () => {},
+  ungroup: () => {},
 });
