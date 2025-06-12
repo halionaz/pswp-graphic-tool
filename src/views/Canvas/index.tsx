@@ -4,7 +4,7 @@ import s from './Canvas.module.css';
 
 import Shape from '@/views/Shape';
 import useSubscribe from '@/hooks/useSubscribe';
-import { ControllerContext } from '@/commands/GraphicEditorContext';
+import { ControllerContext } from '@/viewModels/GraphicEditorContext';
 
 const Canvas = () => {
   const objects = useSubscribe();

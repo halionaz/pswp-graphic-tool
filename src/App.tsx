@@ -1,4 +1,4 @@
-import ContextProvider from '@/commands/ContextProvider';
+import ContextProvider from '@/viewModels/ContextProvider';
 
 import Canvas from '@/views/Canvas';
 import PropertiesPanel from '@/views/PropertiesPanel';

@@ -5,7 +5,7 @@ import s from './Properties.module.css';
 import {
   ControllerContext,
   SelectedObjectsContext,
-} from '@/commands/GraphicEditorContext';
+} from '@/viewModels/GraphicEditorContext';
 import useSubscribe from '@/hooks/useSubscribe';
 
 const Properties = () => {

@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 
 import { GraphicObjectInterface } from '@/models/GraphicObjectInterface';
 import { ScaleType } from '@/models/types';
-import { ControllerContext } from '@/commands/GraphicEditorContext';
+import { ControllerContext } from '@/viewModels/GraphicEditorContext';
 
 import s from './Handlers.module.css';
 

@@ -3,7 +3,7 @@ import {
   ControllerContext,
   ControllerContextInterface,
   SelectedObjectsContext,
-} from './GraphicEditorContext';
+} from '@/viewModels/GraphicEditorContext';
 import {
   GraphicObjectInterface,
   GraphicObjectType,

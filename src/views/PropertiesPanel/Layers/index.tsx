@@ -6,7 +6,7 @@ import useSubscribe from '@/hooks/useSubscribe';
 import {
   ControllerContext,
   SelectedObjectsContext,
-} from '@/commands/GraphicEditorContext';
+} from '@/viewModels/GraphicEditorContext';
 
 const Layers = () => {
   const objects = useSubscribe();
